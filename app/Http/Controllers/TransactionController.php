@@ -45,10 +45,16 @@ class TransactionController extends Controller
 
     public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
+        $account = $transaction->account;
+
         $transaction->fill($request->validated());
         $transaction->save();
 
-        $transaction->account->updateAmount()->save();
+        if ($transaction->wasChanged('account_id')) {
+            $account->updateAmount()->save();
+        }
+
+        $transaction->refresh()->account->updateAmount()->save();
 
         return redirect()->route('transactions.index');
     }

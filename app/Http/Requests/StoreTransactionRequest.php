@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Account;
+use App\Rules\AmountRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreTransactionRequest extends FormRequest
 {
@@ -34,5 +37,25 @@ class StoreTransactionRequest extends FormRequest
                 'exists:accounts,id'
             ]
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            if ($this->accountAmountIsNegative()) {
+                $validator->errors()->add('amount', 'This amount would make your account have a negative balance');
+            }
+        });
+    }
+
+    protected function accountAmountIsNegative(): bool
+    {
+        $account = Account::query()->find($this->input('account_id'));
+
+        if ($account->amount + intval($this->input('amount')) < 0) {
+            return true;
+        }
+
+        return false;
     }
 }

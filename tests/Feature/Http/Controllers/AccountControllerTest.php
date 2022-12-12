@@ -1,8 +1,10 @@
 <?php
 
 use Database\Factories\AccountFactory;
+use Database\Factories\TransactionFactory;
 use Inertia\Testing\AssertableInertia;
 
+use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
@@ -80,10 +82,18 @@ test('delete account', function () {
         'currency' => 'USD'
     ]);
 
+    assertDatabaseCount('transactions', 0);
+
+    $account->transactions()->save(TransactionFactory::new()->makeOne());
+
     assertDatabaseHas('accounts', [
         'name' => $account->name,
         'currency' => $account->currency
     ]);
+
+    assertDatabaseCount('transactions', 1);
+
+    expect($account->transactions()->count(), 1);
 
     delete(route('accounts.destroy', [$account]))->assertRedirect(route('accounts.index'));
 
@@ -91,4 +101,6 @@ test('delete account', function () {
         'name' => $account->name,
         'currency' => $account->currency
     ]);
+
+    assertDatabaseCount('transactions', 0);
 });

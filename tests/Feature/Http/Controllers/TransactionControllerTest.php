@@ -72,6 +72,23 @@ test('create transaction', function () {
     expect($account->amount)->toBe(0);
 });
 
+test('can not create transaction that puts the account in negative number', function () {
+    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 1000]));
+    $account->updateAmount()->save();
+
+    expect($account->amount)->toBe(1000);
+
+    post(route('transactions.store'), [
+        'date' => '2022-12-09',
+        'amount' => -1100,
+        'category_id' => CategoryFactory::new()->createOne(['name' => 'Comida'])->id,
+        'account_id' => $account->id
+    ])->assertInvalid([
+        'amount' => 'This amount would make your account have a negative balance'
+    ]);
+});
+
 test('show edit transaction page', function () {
     $transaction = TransactionFactory::new()->createOne();
 
@@ -114,6 +131,59 @@ test('update transaction', function () {
     $account->refresh();
 
     expect($account->amount)->toBe(1800);
+});
+
+test('can not update a transaction that puts the account in negative number', function () {
+    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+
+    $transaction = TransactionFactory::new()->createOne([
+        'date' => '2022-12-02',
+        'amount' => 1000,
+        'account_id' => $account->id,
+    ]);
+
+    $account->updateAmount()->save();
+
+    expect($account->amount)->toBe(1000);
+
+    put(route('transactions.update', [$transaction]), [
+        'amount' => -1001,
+    ])->assertInvalid([
+        'amount' => 'This amount would make your account have a negative balance'
+    ]);
+});
+
+test('move a transaction to a different account updates both account\'s amounts', function () {
+    $account1 = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account1->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 1000]));
+
+    $account1->updateAmount()->save();
+
+    expect($account1->amount)->toBe(1000);
+
+    $account2 = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account2->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 2000]));
+    $account2->updateAmount()->save();
+
+    expect($account2->amount)->toBe(2000);
+
+    $transaction = TransactionFactory::new()->createOne([
+        'date' => '2022-12-02',
+        'description' => 'Patanos',
+        'amount' => -1000,
+        'account_id' => $account1->id,
+    ]);
+
+    $account1->updateAmount()->save();
+
+    expect($account1->refresh()->amount)->toBe(0);
+
+    put(route('transactions.update', [$transaction]), [
+        'account_id' => $account2->id
+    ])->assertRedirect(route('transactions.index'));
+
+    expect($account1->refresh()->amount)->toBe(1000);
+    expect($account2->refresh()->amount)->toBe(1000);
 });
 
 test('delete transaction', function () {
