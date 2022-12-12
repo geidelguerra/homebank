@@ -13,11 +13,10 @@ Route::middleware('auth:web')->group(function () {
     Route::post('logout', LogoutController::class)->name('logout');
 
     Route::resource('accounts', AccountController::class);
+
+    Route::resource('transactions', TransactionController::class);
 });
 
 Route::get('/', function () {
     return inertia('Home');
 })->name('home');
-
-
-Route::resource('transactions', TransactionController::class);
