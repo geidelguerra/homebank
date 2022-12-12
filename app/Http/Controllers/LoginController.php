@@ -21,6 +21,8 @@ class LoginController extends Controller
             ]);
         }
 
-        return redirect()->route('home');
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('home'));
     }
 }
