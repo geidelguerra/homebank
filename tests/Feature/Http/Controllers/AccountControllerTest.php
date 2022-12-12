@@ -2,8 +2,10 @@
 
 use Database\Factories\AccountFactory;
 use Database\Factories\TransactionFactory;
+use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
 
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
@@ -12,24 +14,51 @@ use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 use function Pest\Laravel\put;
 
+test('fail to show accounts list page for guest users', function () {
+    get(route('accounts.index'))->assertRedirect(route('login.show'));
+});
+
 test('show accounts list page', function () {
-    get(route('accounts.index'))->assertInertia(function (AssertableInertia $inertia) {
-        $inertia->component('accounts/List');
-    });
+    actingAs(UserFactory::new()->createOne())
+        ->get(route('accounts.index'))
+        ->assertInertia(function (AssertableInertia $inertia) {
+            $inertia->component('accounts/List');
+        });
+});
+
+test('fail to show account page for guest users', function () {
+    $account = AccountFactory::new()->createOne();
+
+    get(route('accounts.show', [$account]))->assertRedirect(route('login.show'));
 });
 
 test('show account page', function () {
-    $account = AccountFactory::new()->create();
+    $account = AccountFactory::new()->createOne();
 
-    get(route('accounts.show', [$account]))->assertInertia(function (AssertableInertia $inertia) {
-        $inertia->component('accounts/View');
-    });
+    actingAs(UserFactory::new()->createOne())
+        ->get(route('accounts.show', [$account]))
+        ->assertInertia(function (AssertableInertia $inertia) {
+            $inertia->component('accounts/View');
+        });
+});
+
+test('fail to show account creation page for guest users', function () {
+    get(route('accounts.create'))->assertRedirect(route('login.show'));
 });
 
 test('show account creation page', function () {
-    get(route('accounts.create'))->assertInertia(function (AssertableInertia $inertia) {
-        $inertia->component('accounts/Edit');
-    });
+    actingAs(UserFactory::new()->createOne())
+        ->get(route('accounts.create'))
+        ->assertInertia(function (AssertableInertia $inertia) {
+            $inertia->component('accounts/Edit');
+        });
+});
+
+test('fail to create account for guest users', function () {
+    post(route('accounts.store'), [
+        'name' => 'My Account',
+        'currency' => 'USD'
+    ])->assertRedirect(route('login.show'));
 });
 
 test('create account', function () {
@@ -38,10 +67,11 @@ test('create account', function () {
         'currency' => 'USD'
     ]);
 
-    post(route('accounts.store'), [
-        'name' => 'My Account',
-        'currency' => 'USD'
-    ])->assertRedirect(route('accounts.index'));
+    actingAs(UserFactory::new()->createOne())
+        ->post(route('accounts.store'), [
+            'name' => 'My Account',
+            'currency' => 'USD'
+        ])->assertRedirect(route('accounts.index'));
 
     assertDatabaseHas('accounts', [
         'name' => 'My Account',
@@ -49,16 +79,24 @@ test('create account', function () {
     ]);
 });
 
-test('show update account page', function () {
-    $account = AccountFactory::new()->create();
+test('fail to show update account page for guest users', function () {
+    $account = AccountFactory::new()->createOne();
 
-    get(route('accounts.edit', [$account]))->assertInertia(function (AssertableInertia $inertia) {
-        $inertia->component('accounts/Edit');
-    });
+    get(route('accounts.edit', [$account]))->assertRedirect(route('login.show'));
 });
 
-test('update account', function () {
-    $account = AccountFactory::new()->create([
+test('show update account page', function () {
+    $account = AccountFactory::new()->createOne();
+
+    actingAs(UserFactory::new()->createOne())
+        ->get(route('accounts.edit', [$account]))
+        ->assertInertia(function (AssertableInertia $inertia) {
+            $inertia->component('accounts/Edit');
+        });
+});
+
+test('fail to update account for guest users', function () {
+    $account = AccountFactory::new()->createOne([
         'name' => 'My Account',
         'currency' => 'USD'
     ]);
@@ -66,7 +104,20 @@ test('update account', function () {
     put(route('accounts.update', [$account]), [
         'name' => 'My Account 2',
         'currency' => 'EUR'
-    ])->assertRedirect(route('accounts.index'));
+    ])->assertRedirect(route('login.show'));
+});
+
+test('update account', function () {
+    $account = AccountFactory::new()->createOne([
+        'name' => 'My Account',
+        'currency' => 'USD'
+    ]);
+
+    actingAs(UserFactory::new()->createOne())
+        ->put(route('accounts.update', [$account]), [
+            'name' => 'My Account 2',
+            'currency' => 'EUR'
+        ])->assertRedirect(route('accounts.index'));
 
     assertDatabaseHas('accounts', [
         'name' =>
@@ -75,9 +126,15 @@ test('update account', function () {
     ]);
 });
 
+test('fail to delete account for guest users', function () {
+    $account = AccountFactory::new()->createOne(['name' => 'My Account','currency' => 'USD']);
+    $account->transactions()->save(TransactionFactory::new()->makeOne());
+
+    delete(route('accounts.destroy', [$account]))->assertRedirect(route('login.show'));
+});
 
 test('delete account', function () {
-    $account = AccountFactory::new()->create([
+    $account = AccountFactory::new()->createOne([
         'name' => 'My Account',
         'currency' => 'USD'
     ]);
@@ -95,7 +152,9 @@ test('delete account', function () {
 
     expect($account->transactions()->count(), 1);
 
-    delete(route('accounts.destroy', [$account]))->assertRedirect(route('accounts.index'));
+    actingAs(UserFactory::new()->createOne())
+        ->delete(route('accounts.destroy', [$account]))
+        ->assertRedirect(route('accounts.index'));
 
     assertDatabaseMissing('accounts', [
         'name' => $account->name,
