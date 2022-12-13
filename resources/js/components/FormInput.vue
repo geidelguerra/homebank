@@ -1,7 +1,7 @@
 <template>
   <div>
     <label>
-      <div class="text-sm font-light mb-1">{{ label }}</div>
+      <div class="text-sm font-medium mb-1 text-slate-600">{{ label }}</div>
       <slot />
     </label>
     <div

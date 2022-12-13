@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Home Bank</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -16,7 +16,7 @@
     @inertiaHead
 </head>
 
-<body class="antialiased font-sans">
+<body class="antialiased font-sans bg-[#E7E9F2] min-h-screen">
     @inertia
 </body>
 

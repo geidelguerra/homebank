@@ -14,7 +14,7 @@
       </Switch>
       <SwitchLabel
         v-if="label"
-        class="mr-4 select-none cursor-pointer"
+        class="mr-4 select-none cursor-pointer text-sm font-medium text-slate-600"
       >
         {{ label }}
       </SwitchLabel>

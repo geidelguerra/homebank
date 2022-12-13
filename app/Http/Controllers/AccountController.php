@@ -10,7 +10,11 @@ class AccountController extends Controller
 {
     public function index()
     {
-        return inertia('accounts/List');
+        return inertia('accounts/List', [
+            'accounts' => function () {
+                return Account::query()->get();
+            }
+        ]);
     }
 
     public function create()

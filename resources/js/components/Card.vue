@@ -1,8 +1,10 @@
 <template>
   <div
     v-bind="$attrs"
-    class="bg-slate-100 rounded-lg p-4"
+    class="relative bg-white p-6 shadow-md shadow-violet-900/5 rounded-xl overflow-hidden"
   >
-    <slot />
+    <main>
+      <slot />
+    </main>
   </div>
 </template>

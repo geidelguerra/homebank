@@ -19,10 +19,13 @@ test('fail to show accounts list page for guest users', function () {
 });
 
 test('show accounts list page', function () {
+    AccountFactory::times(3)->create();
+
     actingAs(UserFactory::new()->createOne())
         ->get(route('accounts.index'))
         ->assertInertia(function (AssertableInertia $inertia) {
-            $inertia->component('accounts/List');
+            $inertia->component('accounts/List')
+                ->has('accounts', 3);
         });
 });
 

@@ -19,6 +19,7 @@
         >
           <Input
             v-model="form.email"
+            spellcheck="false"
             type="text"
           />
         </FormInput>
@@ -37,9 +38,10 @@
             label="Remember"
           />
         </div>
-        <div class="flex justify-end">
+        <div>
           <Button
             type="submit"
+            class="w-full"
             :disabled="form.processing"
           >
             Login
