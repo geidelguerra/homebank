@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
+use App\Models\Currency;
 
 class AccountController extends Controller
 {
@@ -19,7 +20,9 @@ class AccountController extends Controller
 
     public function create()
     {
-        return inertia('accounts/Edit');
+        return inertia('accounts/Edit', [
+            'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code')
+        ]);
     }
 
     public function store(StoreAccountRequest $request)
@@ -55,11 +58,7 @@ class AccountController extends Controller
 
         return inertia('accounts/Edit', [
             'account' => $account,
-            'availableCurrencies' => [
-                'USD',
-                'EUR',
-                'CUP',
-            ]
+            'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code')
         ]);
     }
 

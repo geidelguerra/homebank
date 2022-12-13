@@ -20,7 +20,8 @@ class StoreAccountRequest extends FormRequest
             'currency' => [
                 'required',
                 'string',
-                'size:3'
+                'size:3',
+                'exists:currencies,code'
             ]
         ];
     }

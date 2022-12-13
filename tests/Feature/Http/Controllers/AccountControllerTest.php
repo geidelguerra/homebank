@@ -1,6 +1,7 @@
 <?php
 
 use Database\Factories\AccountFactory;
+use Database\Factories\CurrencyFactory;
 use Database\Factories\TransactionFactory;
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
@@ -64,6 +65,15 @@ test('fail to create account for guest users', function () {
     ])->assertRedirect(route('login.show'));
 });
 
+test('fail to create account if currency does not exists', function () {
+    actingAs(UserFactory::new()->createOne())
+        ->post(route('accounts.store'), [
+            'name' => 'My Account',
+            'currency' => 'USD'
+        ])
+            ->assertInvalid(['currency' => 'The selected currency is invalid.']);
+});
+
 test('create account', function () {
     assertDatabaseMissing('accounts', [
         'name' => 'My Account',
@@ -73,7 +83,7 @@ test('create account', function () {
     actingAs(UserFactory::new()->createOne())
         ->post(route('accounts.store'), [
             'name' => 'My Account',
-            'currency' => 'USD'
+            'currency' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code,
         ])->assertRedirect(route('accounts.index'));
 
     assertDatabaseHas('accounts', [
@@ -101,25 +111,25 @@ test('show update account page', function () {
 test('fail to update account for guest users', function () {
     $account = AccountFactory::new()->createOne([
         'name' => 'My Account',
-        'currency' => 'USD'
+        'currency' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code
     ]);
 
     put(route('accounts.update', [$account]), [
         'name' => 'My Account 2',
-        'currency' => 'EUR'
+        'currency' => CurrencyFactory::new()->createOne(['code' => 'EUR'])->code
     ])->assertRedirect(route('login.show'));
 });
 
 test('update account', function () {
     $account = AccountFactory::new()->createOne([
         'name' => 'My Account',
-        'currency' => 'USD'
+        'currency' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code
     ]);
 
     actingAs(UserFactory::new()->createOne())
         ->put(route('accounts.update', [$account]), [
             'name' => 'My Account 2',
-            'currency' => 'EUR'
+            'currency' => CurrencyFactory::new()->createOne(['code' => 'EUR'])->code
         ])->assertRedirect(route('accounts.index'));
 
     assertDatabaseHas('accounts', [
@@ -130,28 +140,25 @@ test('update account', function () {
 });
 
 test('fail to delete account for guest users', function () {
-    $account = AccountFactory::new()->createOne(['name' => 'My Account','currency' => 'USD']);
+    $account = AccountFactory::new()->createOne();
     $account->transactions()->save(TransactionFactory::new()->makeOne());
 
     delete(route('accounts.destroy', [$account]))->assertRedirect(route('login.show'));
 });
 
 test('delete account', function () {
-    $account = AccountFactory::new()->createOne([
-        'name' => 'My Account',
-        'currency' => 'USD'
-    ]);
+    $account = AccountFactory::new()->createOne();
 
-    assertDatabaseCount('transactions', 0);
+    TransactionFactory::times(3)->income()->create();
 
-    $account->transactions()->save(TransactionFactory::new()->makeOne());
+    $account->transactions()->save(TransactionFactory::new()->income()->makeOne());
+
+    assertDatabaseCount('transactions', 4);
 
     assertDatabaseHas('accounts', [
         'name' => $account->name,
         'currency' => $account->currency
     ]);
-
-    assertDatabaseCount('transactions', 1);
 
     expect($account->transactions()->count(), 1);
 
@@ -164,5 +171,9 @@ test('delete account', function () {
         'currency' => $account->currency
     ]);
 
-    assertDatabaseCount('transactions', 0);
+    // Assert transactions associated with the deleted account are also deleted
+    assertDatabaseCount('transactions', 3);
+    assertDatabaseMissing('transactions', [
+        'account_id' => $account->id
+    ]);
 });

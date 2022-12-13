@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
@@ -18,4 +19,6 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('accounts', AccountController::class);
 
     Route::resource('transactions', TransactionController::class);
+
+    Route::resource('currencies', CurrencyController::class);
 });

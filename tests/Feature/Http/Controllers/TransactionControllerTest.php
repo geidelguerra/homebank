@@ -61,7 +61,7 @@ test('fail to create transaction for guest user', function () {
 
 test('create transaction', function () {
     $category = CategoryFactory::new()->createOne(['name' => 'Comida']);
-    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account = AccountFactory::new()->createOne();
     $account->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 18000]));
     $account->updateAmount()->save();
 
@@ -99,7 +99,7 @@ test('create transaction', function () {
 });
 
 test('can not create transaction that puts the account in negative number', function () {
-    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account = AccountFactory::new()->createOne();
     $account->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 1000]));
     $account->updateAmount()->save();
 
@@ -143,7 +143,7 @@ test('fail to update transaction for guest user', function () {
 });
 
 test('update transaction', function () {
-    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account = AccountFactory::new()->createOne();
     $account->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 3600]));
 
     $transaction = TransactionFactory::new()->createOne([
@@ -180,7 +180,7 @@ test('update transaction', function () {
 });
 
 test('can not update a transaction that puts the account in negative number', function () {
-    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account = AccountFactory::new()->createOne();
 
     $transaction = TransactionFactory::new()->createOne([
         'date' => '2022-12-02',
@@ -201,14 +201,14 @@ test('can not update a transaction that puts the account in negative number', fu
 });
 
 test('move a transaction to a different account updates both account\'s amounts', function () {
-    $account1 = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account1 = AccountFactory::new()->createOne();
     $account1->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 1000]));
 
     $account1->updateAmount()->save();
 
     expect($account1->amount)->toBe(1000);
 
-    $account2 = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account2 = AccountFactory::new()->createOne();
     $account2->transactions()->save(TransactionFactory::new()->makeOne(['amount' => 2000]));
     $account2->updateAmount()->save();
 
@@ -241,7 +241,7 @@ test('fail to delete transaction for guest user', function () {
 });
 
 test('delete transaction', function () {
-    $account = AccountFactory::new()->createOne(['name' => 'Efectivo', 'currency' => 'CUP']);
+    $account = AccountFactory::new()->createOne();
 
     $transaction = TransactionFactory::new()->createOne(['amount' => 3600, 'account_id' => $account->id]);
 

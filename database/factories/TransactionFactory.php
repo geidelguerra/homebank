@@ -22,4 +22,13 @@ class TransactionFactory extends Factory
             'account_id' => AccountFactory::new()
         ];
     }
+
+    public function income(): static
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'amount' => $this->faker->numberBetween(100, 10000)
+            ];
+        });
+    }
 }
