@@ -65,7 +65,7 @@ test('delete currency', function () {
 
     $currency = CurrencyFactory::new()->createOne(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
 
-    AccountFactory::times(2)->create(['currency' => $currency->code]);
+    AccountFactory::times(2)->create(['currency_code' => $currency->code]);
 
     assertDatabaseCount('accounts', 4);
 
@@ -82,6 +82,6 @@ test('delete currency', function () {
     // Assert accounts using the deleted currency where deleted
     assertDatabaseCount('accounts', 2);
     assertDatabaseMissing('accounts', [
-        'currency' => 'USD'
+        'currency_code' => 'USD'
     ]);
 });

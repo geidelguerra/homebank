@@ -16,7 +16,7 @@ class AccountFactory extends Factory
     {
         return [
             'name' => $this->faker->company(),
-            'currency' => CurrencyFactory::new(),
+            'currency_code' => CurrencyFactory::new(),
         ];
     }
 }

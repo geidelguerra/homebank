@@ -17,7 +17,7 @@ class StoreAccountRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'currency' => [
+            'currency_code' => [
                 'required',
                 'string',
                 'size:3',

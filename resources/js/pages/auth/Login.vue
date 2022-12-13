@@ -40,6 +40,7 @@
         </div>
         <div>
           <Button
+            color="primary"
             type="submit"
             class="w-full"
             :disabled="form.processing"

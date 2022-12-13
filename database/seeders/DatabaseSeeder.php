@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
         CurrencyFactory::new()->createOne(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
         CurrencyFactory::new()->createOne(['code' => 'EUR', 'base' => [10], 'exponent' => 2]);
 
-        AccountFactory::new()->createOne(['name' => 'Cash', 'currency' => 'USD']);
+        AccountFactory::new()->createOne(['name' => 'Cash', 'currency_code' => 'USD']);
 
-        AccountFactory::new()->createOne(['name' => 'Cash', 'currency' => 'EUR']);
+        AccountFactory::new()->createOne(['name' => 'Cash', 'currency_code' => 'EUR']);
 
-        AccountFactory::new()->createOne(['name' => 'Credit Card', 'currency' => 'USD']);
+        AccountFactory::new()->createOne(['name' => 'Credit Card', 'currency_code' => 'USD']);
     }
 }

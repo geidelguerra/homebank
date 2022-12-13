@@ -18,11 +18,12 @@ class UpdateAccountRequest extends FormRequest
                 'string',
                 'max:255'
             ],
-            'currency' => [
+            'currency_code' => [
                 'sometimes',
                 'required',
                 'string',
-                'size:3'
+                'size:3',
+                'exists:currencies,code'
             ]
         ];
     }

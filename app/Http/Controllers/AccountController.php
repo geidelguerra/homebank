@@ -13,13 +13,23 @@ class AccountController extends Controller
     {
         return inertia('accounts/List', [
             'accounts' => function () {
-                return Account::query()->get();
+                return Account::query()->with('currency')->get();
             }
         ]);
     }
 
     public function create()
     {
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Accounts',
+                'url' => route('accounts.index')
+            ],
+            [
+                'text' => 'Add account',
+            ],
+        ]);
+
         return inertia('accounts/Edit', [
             'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code')
         ]);
@@ -27,10 +37,7 @@ class AccountController extends Controller
 
     public function store(StoreAccountRequest $request)
     {
-        $account = new Account([
-            'name' => $request->validated('name'),
-            'currency' => $request->validated('currency')
-        ]);
+        $account = new Account($request->validated());
 
         $account->save();
 
