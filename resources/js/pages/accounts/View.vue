@@ -1,5 +1,5 @@
 <template>
   <div>
-    Edit
+    View account
   </div>
 </template>

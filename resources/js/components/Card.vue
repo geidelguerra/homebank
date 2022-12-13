@@ -1,10 +1,17 @@
 <template>
-  <div
+  <Component
     v-bind="$attrs"
-    class="relative bg-white p-6 shadow-md shadow-violet-900/5 rounded-xl overflow-hidden"
+    :is="tag"
+    class="relative bg-white p-4 shadow-md shadow-violet-900/5 rounded-lg overflow-hidden"
   >
     <main>
       <slot />
     </main>
-  </div>
+  </Component>
 </template>
+
+<script setup>
+const props = defineProps({
+  tag: { type: String, default: 'div' }
+})
+</script>

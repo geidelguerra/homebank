@@ -43,8 +43,23 @@ class AccountController extends Controller
 
     public function edit(Account $account)
     {
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Accounts',
+                'url' => route('accounts.index')
+            ],
+            [
+                'text' => 'Edit account',
+            ],
+        ]);
+
         return inertia('accounts/Edit', [
-            'account' => $account
+            'account' => $account,
+            'availableCurrencies' => [
+                'USD',
+                'EUR',
+                'CUP',
+            ]
         ]);
     }
 
