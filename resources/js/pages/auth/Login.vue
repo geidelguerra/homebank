@@ -1,9 +1,14 @@
 <template>
   <div class="h-screen flex items-center justify-center">
     <Card class="max-w-sm w-full">
-      <h1 class="text-xl mb-4">
-        Login
-      </h1>
+      <header class="mb-4">
+        <h1 class="text-xl font-medium">
+          Login
+        </h1>
+        <p class="text-xs text-slate-500">
+          Welcome to Home Bank!
+        </p>
+      </header>
       <form
         class="flex flex-col space-y-4"
         @submit.prevent="submit"

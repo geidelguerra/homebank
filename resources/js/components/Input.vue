@@ -1,7 +1,7 @@
 <template>
   <input
     v-bind="$attrs"
-    class="p-2 bg-white rounded text-sm transition-all border border-gray-400 w-full focus:outline-indigo-500"
+    class="p-2 bg-white rounded text-sm font-light transition-all border border-gray-400 w-full focus:outline-indigo-500"
     :value="modelValue"
     @input="event => emit('update:modelValue', event.target.value)"
   >
