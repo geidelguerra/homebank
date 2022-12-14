@@ -9,8 +9,9 @@
         :error="form.errors.date"
       >
         <Input
-          v-model="form.date"
+          :value="formatDate(form.date, 'yyyy-MM-dd')"
           type="date"
+          @input="form.date = $event.target.value"
         />
       </FormInput>
       <FormInput
@@ -32,7 +33,6 @@
           step="0.01"
         />
       </FormInput>
-
       <FormInput
         label="Category"
         :error="form.errors.category_id"
@@ -90,7 +90,7 @@ const exists = computed(() => props.transaction?.id !== undefined)
 
 const form = useForm({
   date: (props.transaction ? new Date(props.transaction.date) : new Date()).toISOString().split('T')[0],
-  amount: props.transaction ? props.transaction.amount / 100 : 0,
+  amount: props.transaction ? props.transaction.amount / 100 : '',
   category_id: props.transaction?.category_id,
   account_id: props.transaction?.account_id,
 })
@@ -115,4 +115,7 @@ const deleteTransaction = () => confirmDialog.value
     color: 'danger'
   })
   .then(() => Inertia.delete(route('transactions.destroy', [props.transaction])))
+  .catch(() => {
+    // Do nothing
+  })
 </script>

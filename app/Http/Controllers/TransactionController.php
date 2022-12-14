@@ -28,6 +28,16 @@ class TransactionController extends Controller
 
     public function create()
     {
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Transactions',
+                'url' => route('transactions.index')
+            ],
+            [
+                'text' => 'Add transaction',
+            ],
+        ]);
+
         return inertia('transactions/Edit', [
             'availableAccounts' => function () {
                 return Account::query()->orderBy('name')->get();
@@ -57,6 +67,16 @@ class TransactionController extends Controller
 
     public function edit(Transaction $transaction)
     {
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Transactions',
+                'url' => route('transactions.index')
+            ],
+            [
+                'text' => 'Edit transaction',
+            ],
+        ]);
+
         return inertia('transactions/Edit', [
             'transaction' => $transaction->load(['account', 'category']),
             'availableAccounts' => function () {

@@ -146,21 +146,27 @@ test('fail to delete account for guest users', function () {
     delete(route('accounts.destroy', [$account]))->assertRedirect(route('login.show'));
 });
 
+test('fail to delete account with transactions', function () {
+    $account = AccountFactory::new()->createOne();
+    $account->transactions()->saveMany(TransactionFactory::times(3)->income()->make());
+
+    assertDatabaseCount('transactions', 3);
+
+    actingAs(UserFactory::new()->createOne())
+        ->delete(route('accounts.destroy', [$account]))
+        ->assertRedirect('/')
+        ->assertSessionHas('message', 'You can not delete this account because it has transactions. First delete all transactions');
+
+    assertDatabaseCount('transactions', 3);
+});
+
 test('delete account', function () {
     $account = AccountFactory::new()->createOne();
-
-    TransactionFactory::times(3)->income()->create();
-
-    $account->transactions()->save(TransactionFactory::new()->income()->makeOne());
-
-    assertDatabaseCount('transactions', 4);
 
     assertDatabaseHas('accounts', [
         'name' => $account->name,
         'currency_code' => $account->currency_code
     ]);
-
-    expect($account->transactions()->count(), 1);
 
     actingAs(UserFactory::new()->createOne())
         ->delete(route('accounts.destroy', [$account]))
@@ -169,11 +175,5 @@ test('delete account', function () {
     assertDatabaseMissing('accounts', [
         'name' => $account->name,
         'currency_code' => $account->currency_code
-    ]);
-
-    // Assert transactions associated with the deleted account are also deleted
-    assertDatabaseCount('transactions', 3);
-    assertDatabaseMissing('transactions', [
-        'account_id' => $account->id
     ]);
 });

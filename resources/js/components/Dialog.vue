@@ -7,7 +7,7 @@
     <Dialog
       as="div"
       class="relative z-10"
-      @close="emit('close')"
+      @close="close"
     >
       <TransitionChild
         as="template"
@@ -40,8 +40,15 @@
               >
                 {{ title }}
               </DialogTitle>
-              <div>
+              <div class="text-sm p-4">
                 <slot />
+              </div>
+              <div class="flex space-x-2 justify-end">
+                <slot name="footer">
+                  <Button @click="close">
+                    Close
+                  </Button>
+                </slot>
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -59,6 +66,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
+import Button from './Button.vue';
 
 const props = defineProps({
   open: Boolean,
@@ -66,4 +74,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
+
+const close = () => emit('close')
 </script>

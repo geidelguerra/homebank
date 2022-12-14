@@ -79,7 +79,12 @@ class AccountController extends Controller
 
     public function destroy(Account $account)
     {
-        $account->transactions()->delete();
+        if ($account->transactions()->exists()) {
+            return redirect()
+                ->back()
+                ->with('message', 'You can not delete this account because it has transactions. First delete all transactions');
+        }
+
         $account->delete();
 
         return redirect()->route('accounts.index');

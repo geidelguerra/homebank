@@ -4,11 +4,8 @@
     :title="title"
     @close="close"
   >
-    <div
-      class="text-sm p-4"
-      v-html="message"
-    />
-    <div class="flex space-x-2 justify-end">
+    <div v-html="message" />
+    <template #footer>
       <Button
         :color="color"
         class="w-24"
@@ -22,7 +19,7 @@
       >
         No
       </Button>
-    </div>
+    </template>
   </Dialog>
 </template>
 
@@ -37,7 +34,6 @@ const message = ref('')
 const color = ref(null)
 
 let resolveCb = null
-let rejectCb = null
 
 const ok = () => {
   resolveCb()
@@ -46,17 +42,14 @@ const ok = () => {
 }
 
 const close = () => {
-  rejectCb()
-
   isOpen.value = false
 }
 
-const show = (options = {}) => new Promise((resolve, reject) => {
+const show = (options = {}) => new Promise((resolve) => {
   title.value = options.title || 'Confirm'
   message.value = options.message
   color.value = options.color || 'primary'
   resolveCb = resolve
-  rejectCb = reject
   isOpen.value = true
 })
 

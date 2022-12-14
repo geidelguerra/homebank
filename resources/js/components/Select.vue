@@ -36,6 +36,7 @@
             v-if="filteredItems.length === 0 && query !== ''"
             class="relative cursor-default select-none py-2 px-4 text-gray-700"
           >
+            <button v-if="allowCustomValue" />
             Nothing found.
           </div>
 
@@ -82,7 +83,8 @@ const props = defineProps({
   modelValue: { type: [String, Number, Object], default: null },
   items: { type: Array, default: () => [] },
   itemKey: { type: String, default: 'id' },
-  itemValue: { type: String, default: 'name' }
+  itemValue: { type: String, default: 'name' },
+  allowCustomValue: Boolean
 })
 
 const getItemKey = (item) => {

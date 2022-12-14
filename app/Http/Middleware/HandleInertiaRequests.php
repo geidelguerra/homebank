@@ -40,7 +40,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => optional(auth()->user(), fn ($user) => [
                 'name' => $user->name,
                 'email' => $user->email
-            ])
+            ]),
+            'message' => $request->session()->pull('message', null)
         ]);
     }
 }

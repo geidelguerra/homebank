@@ -45,20 +45,31 @@
         <slot />
       </main>
     </div>
+    <Dialog
+      title="Info"
+      :open="isMessageDialogOpen"
+      @close="isMessageDialogOpen = false"
+    >
+      {{ message }}
+    </Dialog>
   </div>
 </template>
 
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Button from '@/components/Button.vue'
-import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import Dialog from '@/components/Dialog.vue';
 import { Inertia } from '@inertiajs/inertia'
 import { InertiaLink } from '@inertiajs/inertia-vue3'
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   auth: { type: Object, default: null },
-  breadcrumbs: { type: Array, default: () => []}
+  breadcrumbs: { type: Array, default: () => []},
+  message: { type: String, default: null }
 })
+
+const isMessageDialogOpen = ref(props.message !== null)
 
 const menuItems = [
   {
@@ -80,4 +91,7 @@ const menuItems = [
 
 const logout = () => Inertia.post(route('logout'))
 
+watch(() => props.message, (val) => {
+  isMessageDialogOpen.value = val !== null
+})
 </script>

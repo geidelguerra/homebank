@@ -21,7 +21,7 @@
           <div class="flex items-center">
             <div>
               <div class="text-sm">
-                {{ new Date(transaction.date).toLocaleDateString() }}
+                {{ formatDate(new Date(transaction.date), 'P') }}
               </div>
               <div class="text-left">
                 {{ transaction.category.name }}

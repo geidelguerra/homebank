@@ -53,9 +53,11 @@ class UpdateTransactionRequest extends FormRequest
 
     protected function accountAmountIsNegative(): bool
     {
-        $account = Account::query()->find($this->input('account_id', $this->route('transaction')->account_id));
+        $transaction = $this->route('transaction');
+        $account = Account::query()->find($this->input('account_id', $transaction->account_id));
+        $amount = $account->transactions()->whereNot('id', $transaction->id)->sum('amount');
 
-        if ($account->amount + intval($this->input('amount')) < 0) {
+        if ($amount + intval($this->input('amount')) < 0) {
             return true;
         }
 
