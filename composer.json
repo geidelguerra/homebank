@@ -2,7 +2,10 @@
     "name": "geidelguerra/laravel-vit-template",
     "type": "project",
     "description": "Laravel + VueJs + InertiaJs + TailwindCSS template",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",

@@ -2,27 +2,26 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
+use App\Models\Currency;
+use App\Models\User;
 use Database\Factories\AccountFactory;
 use Database\Factories\CurrencyFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        UserFactory::new()->create([
+        User::create([
             'name' => 'Admin',
-            'email' => 'admin@example.com',
+            'email' => env('DEFAULT_USER_EMAIL', 'admin@example.com'),
+            'password' => Hash::make(env('DEFAULT_USER_PASSWORD', 'password'))
         ]);
 
-        CurrencyFactory::new()->createOne(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
-        CurrencyFactory::new()->createOne(['code' => 'EUR', 'base' => [10], 'exponent' => 2]);
-
-        AccountFactory::new()->createOne(['name' => 'Cash', 'currency_code' => 'USD']);
-
-        AccountFactory::new()->createOne(['name' => 'Cash', 'currency_code' => 'EUR']);
-
-        AccountFactory::new()->createOne(['name' => 'Credit Card', 'currency_code' => 'USD']);
+        Currency::create(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
+        Currency::create(['code' => 'EUR', 'base' => [10], 'exponent' => 2]);
     }
 }
