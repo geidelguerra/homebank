@@ -19,9 +19,14 @@ test('fail to show transactions page for guest user', function () {
 });
 
 test('show transactions page', function () {
+    TransactionFactory::times(2)->create();
+
     actingAs(UserFactory::new()->createOne(), 'web')
         ->get(route('transactions.index'))->assertInertia(function (AssertableInertia $inertia) {
-            $inertia->component('transactions/List');
+            $inertia->component('transactions/List')
+                ->has('transactions', function (AssertableInertia $inertia) {
+                    $inertia->has('data', 3);
+                });
         });
 });
 

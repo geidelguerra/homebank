@@ -7,22 +7,78 @@ use App\Http\Requests\UpdateTransactionRequest;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return inertia('transactions/List', [
-            'transactions' => function () {
+            'transactions' => function () use ($request) {
                 return Transaction::query()
+                    ->when($request->input('filtered_date_preset'), function ($query, $datePreset) {
+                        $query->whereBetween('date', match ($datePreset) {
+                            'Today' => [now()->startOfDay(), now()],
+                            'This week' => [now()->startOfWeek(), now()],
+                            'Last week' => [now()->subWeek()->startOfWeek(), now()],
+                            'This month' => [now()->startOfMonth(), now()],
+                            'Last month' => [now()->subMonth()->startOfMonth(), now()],
+                            'This quarter' => [now()->startOfQuarter(), now()],
+                            'Last quarter' => [now()->subQuarter()->startOfQuarter(), now()],
+                            'This year' => [now()->startOfYear(), now()],
+                            'Last year' => [now()->subYear()->startOfDay(), now()],
+                            default => []
+                        });
+                    })
+                    ->when($request->input('filtered_accounts'), function ($query, $accounts) {
+                        $query->whereIn('account_id', explode(',', $accounts));
+                    })
+                    ->when($request->input('filtered_categories'), function ($query, $categories) {
+                        $query->whereIn('category_id', explode(',', $categories));
+                    })
+                    ->when($request->input('filtered_type'), function ($query, $type) {
+                        $query->where('amount', $type === 'Income' ? '>' : '<', 0);
+                    })
                     ->with([
                         'account.currency',
                         'category'
                     ])
                     ->latest('date')
                     ->orderByDesc('id')
+                    ->paginate($request->input('per_page'))
+                    ->withQueryString();
+            },
+            'availableDatePresets' => function () {
+                return [
+                    'Today',
+                    'This week',
+                    'Last week',
+                    'This month',
+                    'Last month',
+                    'This quarter',
+                    'Last quarter',
+                    'This year',
+                    'Last year'
+                ];
+            },
+            'availableAccounts' => function () {
+                return Account::query()
+                    ->whereHas('transactions')
+                    ->orderBy('name')
                     ->get();
-            }
+            },
+            'availableCategories' => function () {
+                return Category::query()
+                    ->orderBy('name')
+                    ->get();
+            },
+            'availableTypes' => function () {
+                return ['Income', 'Expense'];
+            },
+            'filteredDatePreset' => array_filter(explode(',', $request->input('filtered_date_preset', ''))),
+            'filteredAccounts' => array_filter(array_map('intval', explode(',', $request->input('filtered_accounts', '')))),
+            'filteredCategories' => array_filter(array_map('intval', explode(',', $request->input('filtered_categories', '')))),
+            'filteredType' => $request->input('filtered_type')
         ]);
     }
 

@@ -6,7 +6,7 @@
   >
     <Dialog
       as="div"
-      class="relative z-10"
+      class="relative z-50"
       @close="close"
     >
       <TransitionChild
@@ -32,7 +32,13 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <DialogPanel class="w-full max-w-md transform overflow-hidden rounded bg-white p-4 text-left align-middle shadow-xl transition-all">
+            <DialogPanel
+              :class="{
+                'absolute w-screen h-screen': fullscreen,
+                'w-full max-w-md rounded': !fullscreen
+              }"
+              class="transform overflow-hidden bg-white p-4 text-left align-middle shadow-xl transition-all flex flex-col"
+            >
               <DialogTitle
                 v-if="title"
                 as="h3"
@@ -40,7 +46,7 @@
               >
                 {{ title }}
               </DialogTitle>
-              <div class="text-sm p-4">
+              <div class="text-sm p-4 flex-1">
                 <slot />
               </div>
               <div class="flex space-x-2 justify-end">
@@ -70,7 +76,8 @@ import Button from './Button.vue';
 
 const props = defineProps({
   open: Boolean,
-  title: { type: String, default: null }
+  title: { type: String, default: null },
+  fullscreen: Boolean
 })
 
 const emit = defineEmits(['close'])
