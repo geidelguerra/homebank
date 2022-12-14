@@ -50,10 +50,10 @@ class StoreTransactionRequest extends FormRequest
 
     protected function accountAmountIsNegative(): bool
     {
-        $account = Account::query()->find($this->input('account_id'));
-
-        if ($account->amount + intval($this->input('amount')) < 0) {
-            return true;
+        if (($account = Account::query()->where('id', $this->input('account_id'))->first()) !== null) {
+            if ($account->amount + intval($this->input('amount')) < 0) {
+                return true;
+            }
         }
 
         return false;

@@ -9,16 +9,18 @@
       >
         <ComboboxInput
           class="p-2 bg-white rounded text-sm font-medium transition-all border border-gray-400 w-full focus:outline-indigo-500"
-          :display-value="getItemDisplayValue"
+          :display-value="item => getItemValue(findItem(item))"
           @change="query = $event.target.value"
         />
         <ComboboxButton
-          class="absolute inset-y-0 right-0 flex items-center pr-2"
+          class="absolute inset-y-0 right-0 flex items-center pr-2 selection-none"
         >
-          <!-- <ChevronUpDownIcon
-            class="h-5 w-5 text-gray-400"
+          <div
+            class="w-6 h-6"
             aria-hidden="true"
-          /> -->
+          >
+            ↡
+          </div>
         </ComboboxButton>
       </div>
       <TransitionRoot
@@ -28,7 +30,7 @@
         @after-leave="query = ''"
       >
         <ComboboxOptions
-          class="absolute flex flex-col space-y-1 mt-1 max-h-60 w-full overflow-auto rounded bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute z-10 flex flex-col space-y-1 mt-1 max-h-60 w-full overflow-auto rounded bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <div
             v-if="filteredItems.length === 0 && query !== ''"
@@ -39,10 +41,10 @@
 
           <ComboboxOption
             v-for="item in filteredItems"
-            :key="getItemId(item)"
+            :key="getItemKey(item)"
             v-slot="{ selected, active }"
             as="template"
-            :value="item"
+            :value="getItemKey(item)"
           >
             <li
               class="relative cursor-pointer select-none p-2 rounded-sm"
@@ -55,7 +57,7 @@
                 class="block truncate"
                 :class="{ 'font-medium': selected, 'font-normal': !selected }"
               >
-                {{ getItemDisplayValue(item) }}
+                {{ getItemValue(item) }}
               </span>
             </li>
           </ComboboxOption>
@@ -78,10 +80,30 @@ import { ref, computed } from 'vue';
 
 const props = defineProps({
   modelValue: { type: [String, Number, Object], default: null },
-  items: { type: Array, default: () => [] }
+  items: { type: Array, default: () => [] },
+  itemKey: { type: String, default: 'id' },
+  itemValue: { type: String, default: 'name' }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const getItemKey = (item) => {
+  if (item !== null && item !== undefined && typeof item === 'object') {
+    return item[props.itemKey]
+  }
+
+  return item
+}
+
+const getItemValue = (item) => {
+  if (item !== null && item !== undefined && typeof item === 'object') {
+    return item[props.itemValue]
+  }
+
+  return item
+}
+
+const findItem = (key) => {
+  return props.items.find((item) => getItemKey(item) === key)
+}
 
 const query = ref('')
 
@@ -90,10 +112,8 @@ const filteredItems = computed(() => {
     return props.items
   }
 
-  return props.items.filter((item) => item.toLowerCase().includes(query.value.toLowerCase()))
+  return props.items.filter((item) => getItemValue(item).toLowerCase().includes(query.value.toLowerCase()))
 })
 
-const getItemId = (item) => item
-
-const getItemDisplayValue = (item) => item
+const emit = defineEmits(['update:modelValue'])
 </script>

@@ -4,18 +4,38 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Models\Account;
+use App\Models\Category;
 use App\Models\Transaction;
 
 class TransactionController extends Controller
 {
     public function index()
     {
-        return inertia('transactions/List');
+        return inertia('transactions/List', [
+            'transactions' => function () {
+                return Transaction::query()
+                    ->with([
+                        'account.currency',
+                        'category'
+                    ])
+                    ->latest('date')
+                    ->orderByDesc('id')
+                    ->get();
+            }
+        ]);
     }
 
     public function create()
     {
-        return inertia('transactions/Edit');
+        return inertia('transactions/Edit', [
+            'availableAccounts' => function () {
+                return Account::query()->orderBy('name')->get();
+            },
+            'availableCategories' => function () {
+                return Category::query()->orderBy('name')->get();
+            }
+        ]);
     }
 
     public function store(StoreTransactionRequest $request)
@@ -38,7 +58,13 @@ class TransactionController extends Controller
     public function edit(Transaction $transaction)
     {
         return inertia('transactions/Edit', [
-            'transaction' => $transaction
+            'transaction' => $transaction->load(['account', 'category']),
+            'availableAccounts' => function () {
+                return Account::query()->orderBy('name')->get();
+            },
+            'availableCategories' => function () {
+                return Category::query()->orderBy('name')->get();
+            }
         ]);
     }
 

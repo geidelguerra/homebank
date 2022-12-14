@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Account;
+use App\Models\Category;
 use App\Models\Currency;
 use App\Models\User;
 use Database\Factories\AccountFactory;
@@ -23,5 +24,10 @@ class DatabaseSeeder extends Seeder
 
         Currency::create(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
         Currency::create(['code' => 'EUR', 'base' => [10], 'exponent' => 2]);
+
+        Category::create(['name' => 'Food']);
+        Category::create(['name' => 'Electricity']);
+        Category::create(['name' => 'Salary']);
+        Category::create(['name' => 'Rent']);
     }
 }
