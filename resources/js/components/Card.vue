@@ -2,7 +2,7 @@
   <Component
     v-bind="$attrs"
     :is="tag"
-    class="relative bg-white p-4 shadow-md shadow-violet-900/5 rounded-lg overflow-hidden"
+    class="relative transition-all bg-white p-4 shadow-md shadow-violet-900/5 rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2"
   >
     <main>
       <slot />

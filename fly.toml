@@ -9,6 +9,8 @@ processes = []
   [build.args]
     NODE_VERSION = "14"
     PHP_VERSION = "8.1"
+[deploy]
+  release_command = "php /var/www/html/artisan migrate:fresh --seed --force"
 
 [env]
   APP_ENV = "production"
@@ -16,6 +18,7 @@ processes = []
   LOG_CHANNEL = "stderr"
   LOG_LEVEL = "info"
   LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+  MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt
 
 [experimental]
   allowed_public_ports = []

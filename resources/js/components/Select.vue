@@ -15,10 +15,10 @@
         <ComboboxButton
           class="absolute inset-y-0 right-0 flex items-center pr-2"
         >
-          <ChevronUpDownIcon
+          <!-- <ChevronUpDownIcon
             class="h-5 w-5 text-gray-400"
             aria-hidden="true"
-          />
+          /> -->
         </ComboboxButton>
       </div>
       <TransitionRoot
@@ -28,7 +28,7 @@
         @after-leave="query = ''"
       >
         <ComboboxOptions
-          class="absolute flex flex-col space-y-1 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute flex flex-col space-y-1 mt-1 max-h-60 w-full overflow-auto rounded bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <div
             v-if="filteredItems.length === 0 && query !== ''"
@@ -45,7 +45,7 @@
             :value="item"
           >
             <li
-              class="relative cursor-pointer select-none py-2 pl-10 pr-4"
+              class="relative cursor-pointer select-none p-2 rounded-sm"
               :class="{
                 'bg-indigo-500 text-white': active || selected,
                 'text-gray-900': !active && !selected,
@@ -56,16 +56,6 @@
                 :class="{ 'font-medium': selected, 'font-normal': !selected }"
               >
                 {{ getItemDisplayValue(item) }}
-              </span>
-              <span
-                v-if="selected"
-                class="absolute inset-y-0 left-0 flex items-center pl-3"
-                :class="{ 'text-white': active, 'text-indigo-500': !active }"
-              >
-                <CheckIcon
-                  class="h-5 w-5"
-                  aria-hidden="true"
-                />
               </span>
             </li>
           </ComboboxOption>

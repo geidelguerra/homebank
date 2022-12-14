@@ -15,6 +15,7 @@
       >
         <Card
           tag="button"
+          class="border-2 border-transparent hover:border-indigo-500"
           @click="$inertia.visit(route('accounts.edit', [account]))"
         >
           <div class="flex">

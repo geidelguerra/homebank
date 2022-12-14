@@ -13,7 +13,7 @@ class AccountController extends Controller
     {
         return inertia('accounts/List', [
             'accounts' => function () {
-                return Account::query()->with('currency')->get();
+                return Account::query()->latest()->with('currency')->get();
             }
         ]);
     }

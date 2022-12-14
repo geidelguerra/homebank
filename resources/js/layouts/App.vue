@@ -49,8 +49,9 @@
 </template>
 
 <script setup>
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Button from '@/components/Button.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { Inertia } from '@inertiajs/inertia'
 import { InertiaLink } from '@inertiajs/inertia-vue3'
 
