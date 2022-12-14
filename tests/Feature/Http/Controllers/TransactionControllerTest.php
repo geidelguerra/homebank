@@ -24,9 +24,7 @@ test('show transactions page', function () {
     actingAs(UserFactory::new()->createOne(), 'web')
         ->get(route('transactions.index'))->assertInertia(function (AssertableInertia $inertia) {
             $inertia->component('transactions/List')
-                ->has('transactions', function (AssertableInertia $inertia) {
-                    $inertia->has('data', 3);
-                });
+                ->has('transactions.data', 2);
         });
 });
 
