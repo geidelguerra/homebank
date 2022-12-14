@@ -11,6 +11,8 @@ class Currency extends Model
 
     public $timestamps = false;
 
+    public $incrementing = false;
+
     public $keyType = 'string';
 
     protected $primaryKey = 'code';
