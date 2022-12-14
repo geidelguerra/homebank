@@ -79,6 +79,7 @@ class AccountController extends Controller
 
     public function destroy(Account $account)
     {
+        $account->transactions()->delete();
         $account->delete();
 
         return redirect()->route('accounts.index');

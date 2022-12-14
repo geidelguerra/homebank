@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
+use App\Models\Account;
 use App\Models\Currency;
 
 class CurrencyController extends Controller
@@ -50,6 +51,8 @@ class CurrencyController extends Controller
 
     public function destroy(Currency $currency)
     {
+        Account::query()->where('currency_code', $currency->code)->delete();
+
         $currency->delete();
 
         return redirect()->route('currencies.index');

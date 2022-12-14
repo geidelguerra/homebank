@@ -13,7 +13,6 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('currency_code', 3);
             $table->unsignedBigInteger('amount')->default(0);
-            $table->foreign('currency_code')->references('code')->on('currencies')->cascadeOnDelete();
         });
     }
 };

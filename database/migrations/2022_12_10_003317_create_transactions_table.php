@@ -13,8 +13,8 @@ return new class () extends Migration {
             $table->date('date');
             $table->integer('amount');
             $table->text('description')->nullable();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
-            $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
+            $table->foreignId('category_id');
+            $table->foreignId('account_id');
         });
     }
 };
