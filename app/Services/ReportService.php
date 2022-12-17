@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Transaction;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 use DateTimeInterface;
@@ -11,20 +12,21 @@ class ReportService
 {
     public function incomeVsExpense(
         DateTimeInterface $startDate,
-        DateTimeInterface $endDate
+        DateTimeInterface $endDate,
+        string $currency
     ): array {
         return [
             'labels' => $this->labels($startDate, $endDate, CarbonInterval::month(), 'M'),
             'datasets' => [
                 [
                     'label' => 'Income',
-                    'data' => $this->income($startDate, $endDate),
+                    'data' => $this->income($startDate, $endDate, $currency),
                     'fill' =>  false,
                     'borderColor' => 'green',
                 ],
                 [
                     'label' => 'Expense',
-                    'data' => $this->expense($startDate, $endDate),
+                    'data' => $this->expense($startDate, $endDate, $currency),
                     'fill' =>  false,
                     'borderColor' => 'red',
                 ]
@@ -34,12 +36,15 @@ class ReportService
 
     private function income(
         DateTimeInterface $startDate,
-        DateTimeInterface $endDate
+        DateTimeInterface $endDate,
+        string $currency
     ): array {
         return DB::table('transactions')
-            ->where('amount', '>', 0)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->selectRaw("SUM(amount) / 100 as value")
+            ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+            ->where('transactions.amount', '>', 0)
+            ->where('accounts.currency_code', $currency)
+            ->whereBetween('transactions.date', [$startDate, $endDate])
+            ->selectRaw("SUM(transactions.amount) / 100 as value")
             ->groupByRaw("DATE_FORMAT(transactions.date, '%Y-%m')")
             ->orderByRaw("DATE_FORMAT(transactions.date, '%Y-%m')")
             ->pluck('value')
@@ -48,12 +53,15 @@ class ReportService
 
     private function expense(
         DateTimeInterface $startDate,
-        DateTimeInterface $endDate
+        DateTimeInterface $endDate,
+        string $currency
     ): array {
         return DB::table('transactions')
-            ->where('amount', '<', 0)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->selectRaw("SUM(amount) / 100 as value")
+            ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+            ->where('transactions.amount', '<', 0)
+            ->where('accounts.currency_code', $currency)
+            ->whereBetween('transactions.date', [$startDate, $endDate])
+            ->selectRaw("SUM(transactions.amount) / -100 as value")
             ->groupByRaw("DATE_FORMAT(transactions.date, '%Y-%m')")
             ->orderByRaw("DATE_FORMAT(transactions.date, '%Y-%m')")
             ->pluck('value')

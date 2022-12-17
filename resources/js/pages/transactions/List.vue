@@ -104,15 +104,14 @@ const props = defineProps({
   availableDatePresets: { type: Array, default: () => [] },
   availableAccounts: { type: Array, default: () => [] },
   availableCategories: { type: Array, default: () => [] },
-  availableTypes: { type: Array, default: () => [] },
-  filteredAccounts: { type: Array, default: () => [] }
+  availableTypes: { type: Array, default: () => [] }
 })
 
 const isFiltersOpen = ref(false)
 
 const filters = reactive({
   datePreset: undefined,
-  accounts: props.filteredAccounts,
+  accounts: [],
   categories: [],
   type: undefined
 })

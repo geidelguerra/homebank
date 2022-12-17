@@ -21,7 +21,7 @@ const props = defineProps({
 const options = {
   elements: {
     line: {
-      tension: 0.5,
+      tension: 0,
       borderCapStyle: 'round',
       borderJoinStyle: 'round'
     }

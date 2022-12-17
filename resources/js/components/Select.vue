@@ -7,10 +7,10 @@
   >
     <div class="relative mt-1">
       <div
-        class="relative w-full cursor-default overflow-hidden rounded"
+        class="relative w-full cursor-default rounded"
       >
         <ComboboxInput
-          class="p-2 bg-white rounded text-sm font-medium transition-all border border-gray-400 w-full focus:outline-indigo-500"
+          class="p-2 bg-white rounded text-sm font-medium transition-all border border-gray-400 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           :display-value="item => getInputValue(item)"
           @change="query = $event.target.value"
         />
