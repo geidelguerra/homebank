@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-4">
     <div class="mb-4">
       <Button
         color="primary"

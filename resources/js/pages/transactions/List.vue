@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col">
+  <div class="flex-1 flex flex-col p-4">
     <div class="mb-4 flex justify-between">
       <Button
         color="primary"

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-4">
     <form
       class="max-w-md flex flex-col space-y-4"
       @submit.prevent="submit"
