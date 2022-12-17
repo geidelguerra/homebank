@@ -78,8 +78,19 @@
               </div>
             </div>
           </div>
-          <div class="text-left text-sm text-slate-600">
-            {{ transaction.description }}
+          <div class="flex">
+            <div class="text-left text-sm text-slate-600 flex-1">
+              {{ transaction.description }}
+            </div>
+            <div class="">
+              <Button
+                color="danger"
+                size="sm"
+                @click.stop="deleteTransaction(transaction)"
+              >
+                Delete transaction
+              </Button>
+            </div>
           </div>
         </Card>
       </template>
@@ -91,6 +102,7 @@
       <Pagination :links="transactions.links" />
     </div>
   </div>
+  <ConfirmDialog ref="confirmDialog" />
 </template>
 
 <script setup>
@@ -101,6 +113,7 @@ import { ref, watch, reactive } from 'vue'
 import FormElement from '@/components/FormElement.vue'
 import Select from '@/components/Select.vue'
 import { Inertia } from '@inertiajs/inertia'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const props = defineProps({
   transactions: { type: Object, default: null },
@@ -111,6 +124,8 @@ const props = defineProps({
 })
 
 const isFiltersOpen = ref(false)
+
+const confirmDialog = ref(null)
 
 const filters = reactive({
   datePreset: undefined,
@@ -128,6 +143,13 @@ const reloadWithFilters = () => Inertia.reload({
   }
 })
 
+const deleteTransaction = (transaction) => confirmDialog.value
+  .show({
+    title: 'Warning',
+    message: 'Proceed to delete this transaction?',
+    color: 'danger'
+  })
+  .then(() => Inertia.delete(route('transactions.destroy', [transaction])))
 
 watch(filters, () => reloadWithFilters())
 </script>
