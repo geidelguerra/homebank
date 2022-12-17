@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <div class="flex items-center bg-indigo-600 px-4 py-2 fixed top-0 w-full z-40">
+    <div
+      v-if="auth"
+      class="flex items-center bg-indigo-600 px-4 py-2 fixed top-0 w-full z-40"
+    >
       <Breadcrumbs :items="breadcrumbs" />
       <div class="flex-1" />
-      <div
-        v-if="auth"
-        class="flex justify-end items-center space-x-2"
-      >
+      <div class="flex justify-end items-center space-x-2">
         <div class="text-white text-sm">
           Welcome back <span class="font-medium">{{ auth.name }}</span>
         </div>
@@ -15,7 +15,13 @@
         </Button>
       </div>
     </div>
-    <div class="flex flex-1 pt-[52px]">
+
+    <div
+      class="flex flex-1"
+      :class="{
+        'pt-[52px]': auth
+      }"
+    >
       <div
         v-if="auth"
         class="w-80 p-4 fixed"
@@ -41,10 +47,17 @@
           </ul>
         </nav>
       </div>
-      <main class="flex-1 p-4 flex flex-col pl-80">
+
+      <main
+        class="flex-1 flex flex-col"
+        :class="{
+          'pl-80': auth
+        }"
+      >
         <slot />
       </main>
     </div>
+
     <Dialog
       title="Info"
       :open="isMessageDialogOpen"
