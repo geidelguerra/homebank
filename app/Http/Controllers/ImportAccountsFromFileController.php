@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Transaction;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -18,8 +19,8 @@ class ImportAccountsFromFileController extends Controller
             ->slice(intval($request->input('ignored_rows', 0)))
             ->each(function ($data) use ($request) {
                 Model::withoutEvents(function () use ($data, $request) {
-                    Transaction::query()->updateOrCreate([
-                        'date' => Carbon::createFromFormat('d/m/Y', $data[intval($request->input('date_column'))], 'America/Havana'),
+                    Transaction::query()->create([
+                        'date' => $this->parseDate($data[intval($request->input('date_column'))]),
                         'description' => $data[intval($request->input('description_column'))],
                         'amount' => $this->parseAmount((string) $data[intval($request->input('amount_column'))]),
                         'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->input('category_column'))]])->getKey(),
@@ -40,6 +41,11 @@ class ImportAccountsFromFileController extends Controller
         });
 
         return redirect()->back();
+    }
+
+    private function parseDate(string $val, ?string $timezone = null): DateTimeInterface
+    {
+        return Carbon::createFromFormat('d/m/Y', $val, $timezone);
     }
 
     private function parseAmount(string $val): int

@@ -11,7 +11,7 @@
         Import accounts from file
       </Button>
     </div>
-    <div class="flex flex-col space-y-2">
+    <div class="flex flex-col space-y-2 flex-1 pb-[36px]">
       <template
         v-for="account in accounts"
         :key="account.id"

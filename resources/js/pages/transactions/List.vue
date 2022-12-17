@@ -78,14 +78,13 @@
               </div>
             </div>
           </div>
-          <div class="flex">
+          <div class="flex space-x-1">
             <div class="text-left text-sm text-slate-600 flex-1">
               {{ transaction.description }}
             </div>
-            <div class="">
+            <div>
               <Button
                 color="danger"
-                size="sm"
                 @click.stop="deleteTransaction(transaction)"
               >
                 Delete transaction
