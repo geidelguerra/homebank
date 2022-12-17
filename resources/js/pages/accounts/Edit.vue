@@ -4,7 +4,7 @@
       class="max-w-md flex flex-col space-y-4"
       @submit.prevent="submit"
     >
-      <FormInput
+      <FormElement
         label="Name"
         :error="form.errors.name"
       >
@@ -12,8 +12,8 @@
           v-model="form.name"
           autofocus
         />
-      </FormInput>
-      <FormInput
+      </FormElement>
+      <FormElement
         label="Currency"
         :error="form.errors.currency_code"
       >
@@ -21,7 +21,7 @@
           v-model="form.currency_code"
           :items="availableCurrencies"
         />
-      </FormInput>
+      </FormElement>
       <div class="flex justify-between">
         <Button
           type="submit"
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import FormInput from '@/components/FormInput.vue'
+import FormElement from '@/components/FormElement.vue'
 import Input from '@/components/Input.vue'
 import Select from '@/components/Select.vue'
 import Button from '@/components/Button.vue'

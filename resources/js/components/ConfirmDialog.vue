@@ -2,6 +2,7 @@
   <Dialog
     :open="isOpen"
     :title="title"
+    size="xs"
     @close="close"
   >
     <div v-html="message" />

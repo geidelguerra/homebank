@@ -13,7 +13,7 @@
         class="flex flex-col space-y-4"
         @submit.prevent="submit"
       >
-        <FormInput
+        <FormElement
           label="Email"
           :error="form.errors.email"
         >
@@ -22,8 +22,8 @@
             spellcheck="false"
             type="text"
           />
-        </FormInput>
-        <FormInput
+        </FormElement>
+        <FormElement
           label="Password"
           :error="form.errors.password"
         >
@@ -31,7 +31,7 @@
             v-model="form.password"
             type="password"
           />
-        </FormInput>
+        </FormElement>
         <div>
           <Switch
             v-model="form.remember"
@@ -55,7 +55,7 @@
 
 <script setup>
 import Card from '@/components/Card.vue'
-import FormInput from '@/components/FormInput.vue'
+import FormElement from '@/components/FormElement.vue'
 import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
 import Switch from '@/components/Switch.vue'

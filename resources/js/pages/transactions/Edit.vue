@@ -4,7 +4,7 @@
       class="max-w-md flex flex-col space-y-4"
       @submit.prevent="submit"
     >
-      <FormInput
+      <FormElement
         label="Date"
         :error="form.errors.date"
       >
@@ -13,8 +13,8 @@
           type="date"
           @input="form.date = $event.target.value"
         />
-      </FormInput>
-      <FormInput
+      </FormElement>
+      <FormElement
         label="Account"
         :error="form.errors.account_id"
       >
@@ -22,8 +22,8 @@
           v-model="form.account_id"
           :items="availableAccounts"
         />
-      </FormInput>
-      <FormInput
+      </FormElement>
+      <FormElement
         label="Amount"
         :error="form.errors.amount"
       >
@@ -32,8 +32,8 @@
           type="number"
           step="0.01"
         />
-      </FormInput>
-      <FormInput
+      </FormElement>
+      <FormElement
         label="Category"
         :error="form.errors.category_id"
       >
@@ -41,7 +41,7 @@
           v-model="form.category_id"
           :items="availableCategories"
         />
-      </FormInput>
+      </FormElement>
       <div class="flex justify-between">
         <Button
           type="submit"
@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import FormInput from '@/components/FormInput.vue'
+import FormElement from '@/components/FormElement.vue'
 import Input from '@/components/Input.vue'
 import Select from '@/components/Select.vue'
 import Button from '@/components/Button.vue'

@@ -34,10 +34,13 @@
           >
             <DialogPanel
               :class="{
-                'absolute w-screen h-screen': fullscreen,
-                'w-full max-w-md rounded': !fullscreen
+                'absolute w-screen h-screen': size === 'full',
+                'w-full max-w-screen-lg rounded': size === 'lg',
+                'w-full max-w-screen-md rounded': size === 'md',
+                'w-full max-w-screen-sm rounded': size === 'sm',
+                'w-full max-w-md rounded': size === 'xs',
               }"
-              class="transform overflow-hidden bg-white p-4 text-left align-middle shadow-xl transition-all flex flex-col"
+              class="transform bg-white p-4 text-left align-middle shadow-xl transition-all flex flex-col"
             >
               <DialogTitle
                 v-if="title"
@@ -77,7 +80,7 @@ import Button from './Button.vue';
 const props = defineProps({
   open: Boolean,
   title: { type: String, default: null },
-  fullscreen: Boolean
+  size: { type: String, default: 'md' }
 })
 
 const emit = defineEmits(['close'])

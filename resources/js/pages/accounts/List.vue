@@ -1,11 +1,14 @@
 <template>
   <div class="p-4">
-    <div class="mb-4">
+    <div class="mb-4 flex space-x-4">
       <Button
         color="primary"
         @click="$inertia.visit(route('accounts.create'))"
       >
         Add account
+      </Button>
+      <Button @click="isImportFromFileOpen = true">
+        Import accounts from file
       </Button>
     </div>
     <div class="flex flex-col space-y-2">
@@ -29,13 +32,21 @@
       </template>
     </div>
   </div>
+  <ImportAccountsFromFileDialog
+    :open="isImportFromFileOpen"
+    @close="isImportFromFileOpen = false"
+  />
 </template>
 
 <script setup>
 import Card from '@/components/Card.vue'
 import Button from '@/components/Button.vue'
+import ImportAccountsFromFileDialog from '@/components/ImportAccountsFromFileDialog.vue';
+import { ref } from 'vue';
 
 const props = defineProps({
   accounts: { type: Array, default: null }
 })
+
+const isImportFromFileOpen = ref(false)
 </script>

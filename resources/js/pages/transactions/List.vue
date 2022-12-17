@@ -17,36 +17,36 @@
       class="mb-4"
     >
       <div class="grid row-auto grid-cols-4 gap-4">
-        <FormInput label="By date">
+        <FormElement label="By date">
           <Select
             v-model="filters.datePreset"
             nullable
             :items="availableDatePresets"
           />
-        </FormInput>
-        <FormInput label="By account">
+        </FormElement>
+        <FormElement label="By account">
           <Select
             v-model="filters.accounts"
             multiple
             nullable
             :items="availableAccounts"
           />
-        </FormInput>
-        <FormInput label="By category">
+        </FormElement>
+        <FormElement label="By category">
           <Select
             v-model="filters.categories"
             multiple
             nullable
             :items="availableCategories"
           />
-        </FormInput>
-        <FormInput label="By type">
+        </FormElement>
+        <FormElement label="By type">
           <Select
             v-model="filters.type"
             nullable
             :items="availableTypes"
           />
-        </FormInput>
+        </FormElement>
       </div>
     </Card>
     <div class="flex flex-col space-y-2 flex-1 pb-[36px]">
@@ -59,9 +59,9 @@
           class="border-2 border-transparent hover:border-indigo-500"
           @click="$inertia.visit(route('transactions.edit', [transaction]))"
         >
-          <div class="flex items-center">
+          <div class="flex items-center mb-2">
             <div>
-              <div class="text-sm">
+              <div class="text-sm text-left">
                 {{ formatDate(new Date(transaction.date), 'P') }}
               </div>
               <div class="text-left">
@@ -77,6 +77,9 @@
                 {{ formatMoney(transaction.amount, transaction.account.currency) }} {{ transaction.account.currency_code }}
               </div>
             </div>
+          </div>
+          <div class="text-left text-sm text-slate-600">
+            {{ transaction.description }}
           </div>
         </Card>
       </template>
@@ -95,7 +98,7 @@ import Card from '@/components/Card.vue'
 import Button from '@/components/Button.vue'
 import Pagination from '@/components/Pagination.vue'
 import { ref, watch, reactive } from 'vue'
-import FormInput from '@/components/FormInput.vue'
+import FormElement from '@/components/FormElement.vue'
 import Select from '@/components/Select.vue'
 import { Inertia } from '@inertiajs/inertia'
 

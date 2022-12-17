@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Transaction;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 use DateTimeInterface;
