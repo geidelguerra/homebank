@@ -15,7 +15,7 @@ class TransactionFactory extends Factory
     public function definition()
     {
         return [
-            'date' => $this->faker->dateTimeThisYear(),
+            'date' => $this->faker->unique()->dateTimeThisYear(),
             'amount' => $this->faker->numberBetween(-10000, 10000),
             'description' => $this->faker->text(),
             'category_id' => CategoryFactory::new(),
@@ -23,11 +23,20 @@ class TransactionFactory extends Factory
         ];
     }
 
-    public function income(): static
+    public function income(int $min = 100, int $max = 100000): static
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function (array $attributes) use ($min, $max) {
             return [
-                'amount' => $this->faker->numberBetween(100, 10000)
+                'amount' => $this->faker->numberBetween($min, $max)
+            ];
+        });
+    }
+
+    public function expense(int $min = -100, int $max = -100000): static
+    {
+        return $this->state(function (array $attributes) use ($min, $max) {
+            return [
+                'amount' => $this->faker->numberBetween($min, $max)
             ];
         });
     }
