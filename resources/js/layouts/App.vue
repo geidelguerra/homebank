@@ -99,6 +99,11 @@ const menuItems = [
     text: 'Transactions',
     url: route('transactions.index'),
     active: () => route().current('transactions.index')
+  },
+  {
+    text: 'Currencies',
+    url: route('currencies.index'),
+    active: () => route().current('currencies.index')
   }
 ]
 

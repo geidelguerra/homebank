@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import FormElement from '@/components/FormElement.vue';
+import FormElement from '@/components/FormElement.vue'
 import LineChart from '@/components/LineChart.vue'
 import Select from '@/components/Select.vue'
 import { Inertia } from '@inertiajs/inertia'

@@ -24,6 +24,25 @@ test('show currencies list page', function () {
         });
 });
 
+test('fail to show create currencypage to guest user', function () {
+    $currency= CurrencyFactory::new()->createOne();
+
+    get(route('currencies.create', [$currency]))->assertRedirect(route('login.show'));
+});
+
+test('show create currency page', function () {
+    $currency= CurrencyFactory::new()->createOne();
+
+    actingAs(UserFactory::new()->createOne(), 'web')
+        ->get(route('currencies.create', [$currency]))->assertInertia(function (AssertableInertia $inertia) {
+            $inertia->component('currencies/Edit');
+        });
+});
+
+test('fail to create currency for guest user', function () {
+    post(route('currencies.store'))->assertRedirect(route('login.show'));
+});
+
 test('create currency', function () {
     actingAs(UserFactory::new()->createOne())
         ->post(route('currencies.store'), [
@@ -39,6 +58,22 @@ test('create currency', function () {
         // 'base' => "[10]",
         'exponent' => 2
     ]);
+});
+
+test('fail to show edit currency page for guest user', function () {
+    $currency = CurrencyFactory::new()->createOne();
+
+    get(route('currencies.edit', [$currency]))->assertRedirect(route('login.show'));
+});
+
+test('show edit currency page', function () {
+    $currency = CurrencyFactory::new()->createOne();
+
+    actingAs(UserFactory::new()->createOne(), 'web')
+        ->get(route('currencies.edit', [$currency]))
+        ->assertInertia(function (AssertableInertia $inertia) {
+            $inertia->component('currencies/Edit');
+        });
 });
 
 test('update currency', function () {
@@ -60,14 +95,21 @@ test('update currency', function () {
     ]);
 });
 
-test('delete currency', function () {
-    AccountFactory::times(2)->create();
-
-    $currency = CurrencyFactory::new()->createOne(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
+test('fail to delete currency if there is accounts using it', function () {
+    $currency = CurrencyFactory::new()->createOne();
 
     AccountFactory::times(2)->create(['currency_code' => $currency->code]);
 
-    assertDatabaseCount('accounts', 4);
+    actingAs(UserFactory::new()->createOne())
+        ->delete(route('currencies.destroy', [$currency]))
+        ->assertRedirect('/')
+        ->assertSessionHas('message', 'You can not delete this currency because there is accounts using it. First delete those accounts or change their currency');
+
+    assertDatabaseCount('accounts', 2);
+});
+
+test('delete currency', function () {
+    $currency = CurrencyFactory::new()->createOne();
 
     actingAs(UserFactory::new()->createOne())
         ->delete(route('currencies.destroy', [$currency]))
@@ -77,11 +119,5 @@ test('delete currency', function () {
         'code' => 'USD',
         // 'base' => "[10]",
         'exponent' => 2
-    ]);
-
-    // Assert accounts using the deleted currency where deleted
-    assertDatabaseCount('accounts', 2);
-    assertDatabaseMissing('accounts', [
-        'currency_code' => 'USD'
     ]);
 });

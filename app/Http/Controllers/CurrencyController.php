@@ -20,7 +20,17 @@ class CurrencyController extends Controller
 
     public function create()
     {
-        //
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Currencies',
+                'url' => route('currencies.index')
+            ],
+            [
+                'text' => 'Add currency',
+            ],
+        ]);
+
+        return inertia('currencies/Edit');
     }
 
     public function store(StoreCurrencyRequest $request)
@@ -38,7 +48,19 @@ class CurrencyController extends Controller
 
     public function edit(Currency $currency)
     {
-        //
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Currencies',
+                'url' => route('currencies.index')
+            ],
+            [
+                'text' => 'Edit currency',
+            ],
+        ]);
+
+        return inertia('currencies/Edit', [
+            'currency' => $currency
+        ]);
     }
 
     public function update(UpdateCurrencyRequest $request, Currency $currency)
@@ -51,7 +73,11 @@ class CurrencyController extends Controller
 
     public function destroy(Currency $currency)
     {
-        Account::query()->where('currency_code', $currency->code)->delete();
+        if ($currency->accounts()->exists()) {
+            return redirect()
+                ->back()
+                ->with('message', 'You can not delete this currency because there is accounts using it. First delete those accounts or change their currency');
+        }
 
         $currency->delete();
 
