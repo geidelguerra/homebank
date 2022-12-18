@@ -3,6 +3,7 @@
     :model-value="modelValue"
     :multiple="multiple"
     :nullable="nullable"
+    :disabled="disabled"
     @update:model-value="val => emit('update:modelValue', val)"
   >
     <div class="relative mt-1">
@@ -12,6 +13,9 @@
         <ComboboxInput
           class="p-2 bg-white rounded text-sm font-medium transition-all border border-gray-400 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           :display-value="item => getInputValue(item)"
+          :class="{
+            'opacity-50': disabled
+          }"
           @change="query = $event.target.value"
         />
         <ComboboxButton
@@ -87,6 +91,7 @@ const props = defineProps({
   itemValue: { type: String, default: 'name' },
   multiple: Boolean,
   nullable: Boolean,
+  disabled: Boolean,
 })
 
 const getItemKey = (item) => {

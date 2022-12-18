@@ -31,27 +31,27 @@ class DatabaseSeeder extends Seeder
         Category::create(['name' => 'Salary']);
         Category::create(['name' => 'Rent']);
 
-        if (app()->environment('local')) {
-            $account = AccountFactory::new()->createOne([
-                'name' => 'Test account',
-                'currency_code' => Currency::where('code', 'USD')->first()->code,
-            ]);
+        // if (app()->environment('local')) {
+        //     $account = AccountFactory::new()->createOne([
+        //         'name' => 'Test account',
+        //         'currency_code' => Currency::where('code', 'USD')->first()->code,
+        //     ]);
 
-            TransactionFactory::times(12)
-                ->for($account)
-                ->for(Category::where('name', 'Salary')->first())
-                ->create([
-                    'amount' => 90000
-                ]);
+        //     TransactionFactory::times(12)
+        //         ->for($account)
+        //         ->for(Category::where('name', 'Salary')->first())
+        //         ->create([
+        //             'amount' => 90000
+        //         ]);
 
-            TransactionFactory::times(12)
-                ->for($account)
-                ->for(Category::where('name', 'Food')->first())
-                ->create([
-                    'amount' => -30000
-                ]);
+        //     TransactionFactory::times(12)
+        //         ->for($account)
+        //         ->for(Category::where('name', 'Food')->first())
+        //         ->create([
+        //             'amount' => -30000
+        //         ]);
 
-            $account->updateAmount()->save();
-        }
+        //     $account->updateAmount()->save();
+        // }
     }
 }

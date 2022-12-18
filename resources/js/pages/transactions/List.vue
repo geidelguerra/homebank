@@ -62,7 +62,7 @@
           <div class="flex items-center mb-2">
             <div>
               <div class="text-sm text-left">
-                {{ formatDate(new Date(transaction.date), 'P') }}
+                {{ formatDate(new Date(transaction.date), 'P') }} ({{ transaction.date }})
               </div>
               <div class="text-left">
                 {{ transaction.category.name }}
