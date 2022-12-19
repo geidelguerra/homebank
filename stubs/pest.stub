@@ -1,0 +1,9 @@
+<?php
+
+test('example', function () {
+    // Arrange
+
+    // Act
+
+    // Assert
+})->skip('Pending');

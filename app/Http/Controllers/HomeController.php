@@ -9,6 +9,11 @@ use App\Services\DateLabelsService;
 use App\Services\ReportService;
 use App\Support\DateRange;
 use App\Support\DateRangePreset;
+use App\Support\ReportAggregateFunction;
+use App\Support\ReportDimension;
+use App\Support\ReportField;
+use App\Support\ReportFilter;
+use App\Support\ReportMetric;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -21,22 +26,34 @@ class HomeController extends Controller
 
         $selectedCurrency = Currency::query()->where('code', $request->string('filtered_currency', 'USD'))->first();
 
-        $groupByDateFormat = match ($selectedDateRangePreset) {
+        $dimension = match ($selectedDateRangePreset) {
             DateRangePreset::CurrentYear,
-            DateRangePreset::LastYear => '%Y-%m',
+            DateRangePreset::LastYear => ReportDimension::Month,
             DateRangePreset::CurrentMonth,
             DateRangePreset::LastMonth,
             DateRangePreset::CurrentWeek,
             DateRangePreset::LastWeek,
             DateRangePreset::Today,
-            DateRangePreset::Yesterday => '%Y-%m-%d',
+            DateRangePreset::Yesterday => ReportDimension::Day,
         };
+
+        $report->setDateRange($selectedDateRange)->setDimension($dimension);
 
         return inertia('Home', [
             'incomeVsExpense' => function () use ($report, $selectedDateRangePreset, $selectedDateRange, $selectedCurrency, $groupByDateFormat) {
                 return [
                     'labels' => (new DateLabelsService())->fromPreset($selectedDateRangePreset, $selectedDateRange),
-                    'datasets' => $report->incomeVsExpense($selectedDateRange, $selectedCurrency->getKey(), $groupByDateFormat)
+                    // 'datasets' => $report->incomeVsExpense($selectedDateRange, $selectedCurrency->getKey(), $groupByDateFormat)
+                    'datasets' => [
+                        // Income
+                        $report->setMetric(ReportMetric::Amount)->setFilters([
+                            ReportFilter::field(ReportField::Amount)->greaterThan(0),
+                        ])->series(ReportAggregateFunction::Sum),
+                        // Expenses
+                        $report->setMetric(ReportMetric::Amount)->setFilters([
+                            ReportFilter::field(ReportField::Amount)->lesserThan(0),
+                        ])->series(ReportAggregateFunction::Sum)
+                    ]
                 ];
             },
             'availableCurrencies' => function () {
