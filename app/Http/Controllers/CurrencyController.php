@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
-use App\Models\Account;
 use App\Models\Currency;
 
 class CurrencyController extends Controller
@@ -14,7 +13,7 @@ class CurrencyController extends Controller
         return inertia('currencies/List', [
             'currencies' => function () {
                 return Currency::query()->orderByDesc('code')->get();
-            }
+            },
         ]);
     }
 
@@ -23,7 +22,7 @@ class CurrencyController extends Controller
         inertia()->share('breadcrumbs', [
             [
                 'text' => 'Currencies',
-                'url' => route('currencies.index')
+                'url' => route('currencies.index'),
             ],
             [
                 'text' => 'Add currency',
@@ -51,7 +50,7 @@ class CurrencyController extends Controller
         inertia()->share('breadcrumbs', [
             [
                 'text' => 'Currencies',
-                'url' => route('currencies.index')
+                'url' => route('currencies.index'),
             ],
             [
                 'text' => 'Edit currency',
@@ -59,7 +58,7 @@ class CurrencyController extends Controller
         ]);
 
         return inertia('currencies/Edit', [
-            'currency' => $currency
+            'currency' => $currency,
         ]);
     }
 

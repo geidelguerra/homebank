@@ -9,6 +9,8 @@ use App\Support\ReportField;
 use App\Support\ReportFilter;
 use App\Support\ReportFilterOperator;
 use App\Support\ReportMetric;
+use Database\Factories\AccountFactory;
+use Database\Factories\CurrencyFactory;
 use Database\Factories\TransactionFactory;
 
 test('returns correct time series results for aggregate function', function (ReportAggregateFunction $aggr) {
@@ -96,3 +98,28 @@ test('returns correct time series results for amount filter', function (ReportFi
         ReportFilter::field(ReportField::Amount)->lesserThan(0),
     ])->mapWithKeys(fn (ReportFilter $filter) => [$filter->__toString() => $filter])->all()
 );
+
+test('returns correct time series results for currency filter', function () {
+    // Arrange
+    $account1 = AccountFactory::new()->for(CurrencyFactory::new()->createOne(['code' => 'USD']))->createOne();
+    TransactionFactory::new()->for($account1)->create(['date' => now(), 'amount' => 1000]);
+    TransactionFactory::new()->for($account1)->create(['date' => now(), 'amount' => -1000]);
+    TransactionFactory::new()->for($account1)->create(['date' => now(), 'amount' => 1000]);
+
+    $account2 = AccountFactory::new()->for(CurrencyFactory::new()->createOne(['code' => "EUR"]))->createOne();
+    TransactionFactory::new()->for($account2)->create(['date' => now(), 'amount' => 5000]);
+    TransactionFactory::new()->for($account2)->create(['date' => now(), 'amount' => -1000]);
+
+    // Act
+    $data = app(ReportService::class)
+        ->setDateRange(DateRange::fromDateRangePreset(DateRangePreset::CurrentMonth))
+        ->setDimension(ReportDimension::Day)
+        ->setMetric(ReportMetric::Amount)
+        ->addFilter(ReportFilter::field(ReportField::Currency)->equals('USD'))
+        ->series(ReportAggregateFunction::Sum);
+
+    // Assert
+    expect($data)->toBeArray();
+    expect($data)->toHaveCount(1);
+    expect($data)->toMatchArray([1000]);
+});

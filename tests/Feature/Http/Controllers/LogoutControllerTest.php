@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use Database\Factories\UserFactory;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertGuest;
 

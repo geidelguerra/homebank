@@ -30,7 +30,7 @@ class ImportAccountsFromFileController extends Controller
                         'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->input('category_column'))]])->getKey(),
                         'account_id' => Account::query()->firstOrCreate([
                             'name' => $data[intval($request->input('account_column'))],
-                            'currency_code' => Currency::query()->firstOrCreate(['code' => 'USD'])->getKey()
+                            'currency_code' => Currency::query()->firstOrCreate(['code' => 'USD'])->getKey(),
                         ])->getKey(),
                     ])->save();
                 });

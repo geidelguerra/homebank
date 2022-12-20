@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Currency;
-use App\Models\Transaction;
 use App\Services\DateLabelsService;
 use App\Services\ReportService;
 use App\Support\DateRange;
@@ -40,7 +39,7 @@ class HomeController extends Controller
         $report->setDateRange($selectedDateRange)->setDimension($dimension);
 
         return inertia('Home', [
-            'incomeVsExpense' => function () use ($report, $selectedDateRangePreset, $selectedDateRange, $selectedCurrency, $groupByDateFormat) {
+            'incomeVsExpense' => function () use ($report, $selectedDateRangePreset, $selectedDateRange) {
                 return [
                     'labels' => (new DateLabelsService())->fromPreset($selectedDateRangePreset, $selectedDateRange),
                     // 'datasets' => $report->incomeVsExpense($selectedDateRange, $selectedCurrency->getKey(), $groupByDateFormat)
@@ -52,8 +51,8 @@ class HomeController extends Controller
                         // Expenses
                         $report->setMetric(ReportMetric::Amount)->setFilters([
                             ReportFilter::field(ReportField::Amount)->lesserThan(0),
-                        ])->series(ReportAggregateFunction::Sum)
-                    ]
+                        ])->series(ReportAggregateFunction::Sum),
+                    ],
                 ];
             },
             'availableCurrencies' => function () {
@@ -63,9 +62,9 @@ class HomeController extends Controller
                 return Account::query()->orderBy('name')->get();
             },
             'selectedDateRange' => $selectedDateRange,
-            'availableDateRangePresets' => collect(DateRangePreset::cases())->filter(fn ($preset) => !in_array($preset, [DateRangePreset::Today, DateRangePreset::Yesterday]))->values(),
+            'availableDateRangePresets' => collect(DateRangePreset::cases())->filter(fn ($preset) => ! in_array($preset, [DateRangePreset::Today, DateRangePreset::Yesterday]))->values(),
             'selectedDateRangePreset' => $selectedDateRangePreset,
-            'selectedCurrency' => $selectedCurrency
+            'selectedCurrency' => $selectedCurrency,
         ]);
     }
 }

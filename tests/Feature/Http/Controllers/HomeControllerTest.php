@@ -2,7 +2,6 @@
 
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 

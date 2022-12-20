@@ -21,9 +21,9 @@ class LoginRequest extends FormRequest
                 'required',
                 'string:255',
             ],
-            'remember'=> [
-                'boolean'
-            ]
+            'remember' => [
+                'boolean',
+            ],
         ];
     }
 }

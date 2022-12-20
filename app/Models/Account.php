@@ -12,7 +12,7 @@ class Account extends Model
     use HasFactory;
 
     protected $casts = [
-        'amount' => 'integer'
+        'amount' => 'integer',
     ];
 
     public function updateAmount(): static

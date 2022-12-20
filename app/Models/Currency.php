@@ -20,7 +20,7 @@ class Currency extends Model
 
     protected $casts = [
         'base' => 'array',
-        'exponent' => 'int'
+        'exponent' => 'int',
     ];
 
     public function accounts(): HasMany

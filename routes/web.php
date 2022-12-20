@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportAccountsFromFileController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 

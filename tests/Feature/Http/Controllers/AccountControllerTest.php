@@ -5,7 +5,6 @@ use Database\Factories\CurrencyFactory;
 use Database\Factories\TransactionFactory;
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
@@ -61,7 +60,7 @@ test('show account creation page', function () {
 test('fail to create account for guest users', function () {
     post(route('accounts.store'), [
         'name' => 'My Account',
-        'currency_code' => 'USD'
+        'currency_code' => 'USD',
     ])->assertRedirect(route('login.show'));
 });
 
@@ -69,7 +68,7 @@ test('fail to create account if currency_code does not exists', function () {
     actingAs(UserFactory::new()->createOne())
         ->post(route('accounts.store'), [
             'name' => 'My Account',
-            'currency_code' => 'USD'
+            'currency_code' => 'USD',
         ])
             ->assertInvalid(['currency_code' => 'The selected currency code is invalid.']);
 });
@@ -77,7 +76,7 @@ test('fail to create account if currency_code does not exists', function () {
 test('create account', function () {
     assertDatabaseMissing('accounts', [
         'name' => 'My Account',
-        'currency_code' => 'USD'
+        'currency_code' => 'USD',
     ]);
 
     actingAs(UserFactory::new()->createOne())
@@ -88,7 +87,7 @@ test('create account', function () {
 
     assertDatabaseHas('accounts', [
         'name' => 'My Account',
-        'currency_code' => 'USD'
+        'currency_code' => 'USD',
     ]);
 });
 
@@ -111,31 +110,30 @@ test('show update account page', function () {
 test('fail to update account for guest users', function () {
     $account = AccountFactory::new()->createOne([
         'name' => 'My Account',
-        'currency_code' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code
+        'currency_code' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code,
     ]);
 
     put(route('accounts.update', [$account]), [
         'name' => 'My Account 2',
-        'currency_code' => CurrencyFactory::new()->createOne(['code' => 'EUR'])->code
+        'currency_code' => CurrencyFactory::new()->createOne(['code' => 'EUR'])->code,
     ])->assertRedirect(route('login.show'));
 });
 
 test('update account', function () {
     $account = AccountFactory::new()->createOne([
         'name' => 'My Account',
-        'currency_code' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code
+        'currency_code' => CurrencyFactory::new()->createOne(['code' => 'USD'])->code,
     ]);
 
     actingAs(UserFactory::new()->createOne())
         ->put(route('accounts.update', [$account]), [
             'name' => 'My Account 2',
-            'currency_code' => CurrencyFactory::new()->createOne(['code' => 'EUR'])->code
+            'currency_code' => CurrencyFactory::new()->createOne(['code' => 'EUR'])->code,
         ])->assertRedirect(route('accounts.index'));
 
     assertDatabaseHas('accounts', [
-        'name' =>
-        'My Account 2',
-        'currency_code' => 'EUR'
+        'name' => 'My Account 2',
+        'currency_code' => 'EUR',
     ]);
 });
 
@@ -165,7 +163,7 @@ test('delete account', function () {
 
     assertDatabaseHas('accounts', [
         'name' => $account->name,
-        'currency_code' => $account->currency_code
+        'currency_code' => $account->currency_code,
     ]);
 
     actingAs(UserFactory::new()->createOne())
@@ -174,6 +172,6 @@ test('delete account', function () {
 
     assertDatabaseMissing('accounts', [
         'name' => $account->name,
-        'currency_code' => $account->currency_code
+        'currency_code' => $account->currency_code,
     ]);
 });

@@ -14,16 +14,16 @@ class ImportAccountsFromFileRequest extends FormRequest
         return [
             'file' => [
                 'required',
-                'file'
+                'file',
             ],
             'ignored_rows' => [
                 'required',
                 'numeric',
-                'min:0'
+                'min:0',
             ],
             'date_column' => [
-                'required'
-            ]
+                'required',
+            ],
         ];
     }
 }

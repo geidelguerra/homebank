@@ -16,7 +16,7 @@ class StoreCurrencyRequest extends FormRequest
                 'required',
                 'string',
                 'size:3',
-                'unique:currencies,code'
+                'unique:currencies,code',
             ],
             'base' => [
                 'required',
@@ -24,13 +24,13 @@ class StoreCurrencyRequest extends FormRequest
             ],
             'base.*' => [
                 'numeric',
-                'min:1'
+                'min:1',
             ],
             'exponent' => [
                 'required',
                 'numeric',
-                'min:0'
-            ]
+                'min:0',
+            ],
         ];
     }
 }

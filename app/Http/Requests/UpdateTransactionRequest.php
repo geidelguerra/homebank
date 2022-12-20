@@ -22,23 +22,23 @@ class UpdateTransactionRequest extends FormRequest
             'amount' => [
                 'sometimes',
                 'required',
-                'numeric'
+                'numeric',
             ],
             'description' => [
                 'nullable',
                 'string',
-                'max:500'
+                'max:500',
             ],
             'category_id' => [
                 'sometimes',
                 'required',
-                'exists:categories,id'
+                'exists:categories,id',
             ],
             'account_id' => [
                 'sometimes',
                 'required',
-                'exists:accounts,id'
-            ]
+                'exists:accounts,id',
+            ],
         ];
     }
 

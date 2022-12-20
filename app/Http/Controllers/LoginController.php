@@ -14,9 +14,9 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        if (!auth('web')->attempt($request->only(['email', 'password']), $request->boolean('remember'))) {
+        if (! auth('web')->attempt($request->only(['email', 'password']), $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => __('auth.failed')
+                'email' => __('auth.failed'),
             ]);
         }
 

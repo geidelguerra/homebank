@@ -80,6 +80,6 @@ class ReportFilter implements Stringable
 
     public function __toString(): string
     {
-        return $this->getField()->name . ' ' . $this->getOperator()->name . ' ' . (string) $this->getValue();
+        return $this->getField()->name.' '.$this->getOperator()->name.' '.(string) $this->getValue();
     }
 }

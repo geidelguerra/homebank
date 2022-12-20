@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use Carbon\CarbonImmutable;
-use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 use DateTimeInterface;
@@ -20,7 +19,7 @@ class DateRange implements Arrayable
     }
 
     /**
-     * @param DateTimeInterface|string|null $now
+     * @param  DateTimeInterface|string|null  $now
      */
     public static function fromDateRangePreset(DateRangePreset $preset, $now = null, $timezone = null): static
     {
@@ -55,7 +54,7 @@ class DateRange implements Arrayable
     {
         return [
             'startDate' => $this->startDate->toRfc850String(),
-            'endDate' => $this->endDate->toRfc850String()
+            'endDate' => $this->endDate->toRfc850String(),
         ];
     }
 }

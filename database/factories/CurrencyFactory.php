@@ -17,7 +17,7 @@ class CurrencyFactory extends Factory
         return [
             'code' => $this->faker->unique()->currencyCode(),
             'base' => [10],
-            'exponent' => 2
+            'exponent' => 2,
         ];
     }
 }

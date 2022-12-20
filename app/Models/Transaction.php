@@ -12,7 +12,7 @@ class Transaction extends Model
 
     protected $casts = [
         'date' => 'date',
-        'amount' => 'integer'
+        'amount' => 'integer',
     ];
 
     public function account(): BelongsTo

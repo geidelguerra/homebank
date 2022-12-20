@@ -14,7 +14,7 @@ class AccountController extends Controller
         return inertia('accounts/List', [
             'accounts' => function () {
                 return Account::query()->latest()->with('currency')->get();
-            }
+            },
         ]);
     }
 
@@ -23,7 +23,7 @@ class AccountController extends Controller
         inertia()->share('breadcrumbs', [
             [
                 'text' => 'Accounts',
-                'url' => route('accounts.index')
+                'url' => route('accounts.index'),
             ],
             [
                 'text' => 'Add account',
@@ -31,7 +31,7 @@ class AccountController extends Controller
         ]);
 
         return inertia('accounts/Edit', [
-            'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code')
+            'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code'),
         ]);
     }
 
@@ -56,7 +56,7 @@ class AccountController extends Controller
         inertia()->share('breadcrumbs', [
             [
                 'text' => 'Accounts',
-                'url' => route('accounts.index')
+                'url' => route('accounts.index'),
             ],
             [
                 'text' => 'Edit account',
@@ -65,7 +65,7 @@ class AccountController extends Controller
 
         return inertia('accounts/Edit', [
             'account' => $account,
-            'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code')
+            'availableCurrencies' => Currency::query()->orderBy('code')->pluck('code'),
         ]);
     }
 

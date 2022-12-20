@@ -19,7 +19,7 @@ class TransactionFactory extends Factory
             'amount' => $this->faker->numberBetween(-10000, 10000),
             'description' => $this->faker->text(),
             'category_id' => CategoryFactory::new(),
-            'account_id' => AccountFactory::new()
+            'account_id' => AccountFactory::new(),
         ];
     }
 
@@ -27,7 +27,7 @@ class TransactionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($min, $max) {
             return [
-                'amount' => $this->faker->numberBetween($min, $max)
+                'amount' => $this->faker->numberBetween($min, $max),
             ];
         });
     }
@@ -36,7 +36,7 @@ class TransactionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($min, $max) {
             return [
-                'amount' => $this->faker->numberBetween($min, $max)
+                'amount' => $this->faker->numberBetween($min, $max),
             ];
         });
     }

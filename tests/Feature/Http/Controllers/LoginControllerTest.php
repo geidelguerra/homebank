@@ -3,7 +3,6 @@
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
-
 use function Pest\Laravel\assertAuthenticatedAs;
 use function Pest\Laravel\assertGuest;
 use function Pest\Laravel\get;
@@ -22,7 +21,7 @@ test('login user', function () {
     post(route('login'), [
         'email' => $user->email,
         'password' => 'password',
-        'remember' => true
+        'remember' => true,
     ])->assertRedirect(route('home'));
 
     assertAuthenticatedAs($user, 'web');
@@ -35,17 +34,17 @@ test('return validation error for invalid credentials', function () {
     post(route('login'), [
         'email' => 'wrongemail@email.e',
         'password' => 'password',
-        'remember' => true
+        'remember' => true,
     ])->assertInvalid([
-        'email' => 'These credentials do not match our records.'
+        'email' => 'These credentials do not match our records.',
     ]);
 
     post(route('login'), [
         'email' => $user->email,
         'password' => 'wrongpassword',
-        'remember' => true
+        'remember' => true,
     ])->assertInvalid([
-        'email' => 'These credentials do not match our records.'
+        'email' => 'These credentials do not match our records.',
     ]);
 
     assertGuest('web');

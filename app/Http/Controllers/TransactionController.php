@@ -41,7 +41,7 @@ class TransactionController extends Controller
                     })
                     ->with([
                         'account.currency',
-                        'category'
+                        'category',
                     ])
                     ->latest('date')
                     ->orderByDesc('id')
@@ -58,7 +58,7 @@ class TransactionController extends Controller
                     'This quarter',
                     'Last quarter',
                     'This year',
-                    'Last year'
+                    'Last year',
                 ];
             },
             'availableAccounts' => function () {
@@ -78,7 +78,7 @@ class TransactionController extends Controller
             'filteredDatePreset' => array_filter(explode(',', $request->input('filtered_date_preset', ''))),
             'filteredAccounts' => array_filter(array_map('intval', explode(',', $request->input('filtered_accounts', '')))),
             'filteredCategories' => array_filter(array_map('intval', explode(',', $request->input('filtered_categories', '')))),
-            'filteredType' => $request->input('filtered_type')
+            'filteredType' => $request->input('filtered_type'),
         ]);
     }
 
@@ -87,7 +87,7 @@ class TransactionController extends Controller
         inertia()->share('breadcrumbs', [
             [
                 'text' => 'Transactions',
-                'url' => route('transactions.index')
+                'url' => route('transactions.index'),
             ],
             [
                 'text' => 'Add transaction',
@@ -100,7 +100,7 @@ class TransactionController extends Controller
             },
             'availableCategories' => function () {
                 return Category::query()->orderBy('name')->get();
-            }
+            },
         ]);
     }
 
@@ -117,7 +117,7 @@ class TransactionController extends Controller
     public function show(Transaction $transaction)
     {
         return inertia('transactions/View', [
-            'transactions' => $transaction
+            'transactions' => $transaction,
         ]);
     }
 
@@ -126,7 +126,7 @@ class TransactionController extends Controller
         inertia()->share('breadcrumbs', [
             [
                 'text' => 'Transactions',
-                'url' => route('transactions.index')
+                'url' => route('transactions.index'),
             ],
             [
                 'text' => 'Edit transaction',
@@ -140,7 +140,7 @@ class TransactionController extends Controller
             },
             'availableCategories' => function () {
                 return Category::query()->orderBy('name')->get();
-            }
+            },
         ]);
     }
 

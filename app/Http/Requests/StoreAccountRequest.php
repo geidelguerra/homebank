@@ -21,8 +21,8 @@ class StoreAccountRequest extends FormRequest
                 'required',
                 'string',
                 'size:3',
-                'exists:currencies,code'
-            ]
+                'exists:currencies,code',
+            ],
         ];
     }
 }

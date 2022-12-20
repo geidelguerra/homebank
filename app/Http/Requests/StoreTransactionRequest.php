@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\Account;
-use App\Rules\AmountRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -21,21 +20,21 @@ class StoreTransactionRequest extends FormRequest
             ],
             'amount' => [
                 'required',
-                'numeric'
+                'numeric',
             ],
             'description' => [
                 'nullable',
                 'string',
-                'max:500'
+                'max:500',
             ],
             'category_id' => [
                 'required',
-                'exists:categories,id'
+                'exists:categories,id',
             ],
             'account_id' => [
                 'required',
-                'exists:accounts,id'
-            ]
+                'exists:accounts,id',
+            ],
         ];
     }
 

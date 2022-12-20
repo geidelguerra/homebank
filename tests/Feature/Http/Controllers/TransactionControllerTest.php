@@ -5,7 +5,6 @@ use Database\Factories\CategoryFactory;
 use Database\Factories\TransactionFactory;
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
@@ -76,7 +75,7 @@ test('create transaction', function () {
         'amount' => -18000,
         'description' => 'Un carton de huevos',
         'category_id' => $category->id,
-        'account_id' => $account->id
+        'account_id' => $account->id,
     ]);
 
     actingAs(UserFactory::new()->createOne(), 'web')
@@ -85,7 +84,7 @@ test('create transaction', function () {
             'amount' => -18000,
             'description' => 'Un carton de huevos',
             'category_id' => $category->id,
-            'account_id' => $account->id
+            'account_id' => $account->id,
         ])->assertRedirect(route('transactions.index'));
 
     assertDatabaseHas('transactions', [
@@ -93,7 +92,7 @@ test('create transaction', function () {
         'amount' => -18000,
         'description' => 'Un carton de huevos',
         'category_id' => $category->id,
-        'account_id' => $account->id
+        'account_id' => $account->id,
     ]);
 
     $account->refresh();
@@ -113,9 +112,9 @@ test('can not create transaction that puts the account in negative number', func
             'date' => '2022-12-09',
             'amount' => -1100,
             'category_id' => CategoryFactory::new()->createOne(['name' => 'Comida'])->id,
-            'account_id' => $account->id
+            'account_id' => $account->id,
         ])->assertInvalid([
-            'amount' => 'This amount would make your account have a negative balance'
+            'amount' => 'This amount would make your account have a negative balance',
         ]);
 });
 
@@ -141,7 +140,7 @@ test('fail to update transaction for guest user', function () {
     put(route('transactions.update', [$transaction]), [
         'date' => '2022-12-01',
         'description' => 'Platanos',
-        'amount' => -1800
+        'amount' => -1800,
     ])->assertRedirect(route('login.show'));
 });
 
@@ -168,7 +167,7 @@ test('update transaction', function () {
         ->put(route('transactions.update', [$transaction]), [
             'date' => '2022-12-01',
             'description' => 'Platanos',
-            'amount' => -1800
+            'amount' => -1800,
         ])->assertRedirect(route('transactions.index'));
 
     assertDatabaseHas('transactions', [
@@ -199,7 +198,7 @@ test('can not update a transaction that puts the account in negative number', fu
         ->put(route('transactions.update', [$transaction]), [
             'amount' => -1001,
         ])->assertInvalid([
-            'amount' => 'This amount would make your account have a negative balance'
+            'amount' => 'This amount would make your account have a negative balance',
         ]);
 });
 
@@ -230,7 +229,7 @@ test('move a transaction to a different account updates both account\'s amounts'
 
     actingAs(UserFactory::new()->createOne(), 'web')
         ->put(route('transactions.update', [$transaction]), [
-            'account_id' => $account2->id
+            'account_id' => $account2->id,
         ])->assertRedirect(route('transactions.index'));
 
     expect($account1->refresh()->amount)->toBe(1000);
@@ -257,7 +256,7 @@ test('delete transaction', function () {
         ->assertRedirect(route('transactions.index'));
 
     assertDatabaseMissing('transactions', [
-        'id' => $transaction->id
+        'id' => $transaction->id,
     ]);
 
     $account->refresh();

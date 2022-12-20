@@ -1,11 +1,9 @@
 <?php
 
-use App\Models\Currency;
 use Database\Factories\AccountFactory;
 use Database\Factories\CurrencyFactory;
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
@@ -25,13 +23,13 @@ test('show currencies list page', function () {
 });
 
 test('fail to show create currencypage to guest user', function () {
-    $currency= CurrencyFactory::new()->createOne();
+    $currency = CurrencyFactory::new()->createOne();
 
     get(route('currencies.create', [$currency]))->assertRedirect(route('login.show'));
 });
 
 test('show create currency page', function () {
-    $currency= CurrencyFactory::new()->createOne();
+    $currency = CurrencyFactory::new()->createOne();
 
     actingAs(UserFactory::new()->createOne(), 'web')
         ->get(route('currencies.create', [$currency]))->assertInertia(function (AssertableInertia $inertia) {
@@ -48,7 +46,7 @@ test('create currency', function () {
         ->post(route('currencies.store'), [
             'code' => 'USD',
             'base' => [10],
-            'exponent' => 2
+            'exponent' => 2,
         ])
         ->assertValid()
         ->assertRedirect(route('currencies.index'));
@@ -56,7 +54,7 @@ test('create currency', function () {
     assertDatabaseHas('currencies', [
         'code' => 'USD',
         // 'base' => "[10]",
-        'exponent' => 2
+        'exponent' => 2,
     ]);
 });
 
@@ -83,7 +81,7 @@ test('update currency', function () {
         ->put(route('currencies.update', [$currency]), [
             'code' => 'USD',
             'base' => [10],
-            'exponent' => 2
+            'exponent' => 2,
         ])
         ->assertValid()
         ->assertRedirect(route('currencies.index'));
@@ -91,7 +89,7 @@ test('update currency', function () {
     assertDatabaseHas('currencies', [
         'code' => 'USD',
         // 'base' => "[10]",
-        'exponent' => 2
+        'exponent' => 2,
     ]);
 });
 
@@ -118,6 +116,6 @@ test('delete currency', function () {
     assertDatabaseMissing('currencies', [
         'code' => 'USD',
         // 'base' => "[10]",
-        'exponent' => 2
+        'exponent' => 2,
     ]);
 });
