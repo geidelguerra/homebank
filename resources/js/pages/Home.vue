@@ -17,7 +17,11 @@
           />
         </FormElement>
       </div>
-      <div>{{ selectedDateRange }}</div>
+      <div class="grid grid-cols-2">
+        <Card class="shadow-none text-center">
+          <span class="text-sm font-medium text-slate-500">{{ formatDate(selectedDateRange.startDate, 'd MMM Y (z)') }} - {{ formatDate(selectedDateRange.endDate, 'd MMM Y (z)') }}</span>
+        </Card>
+      </div>
       <div class="grid row-auto grid-cols-2">
         <Card>
           <Chart
