@@ -8,7 +8,7 @@ processes = []
 [build]
   [build.args]
     NODE_VERSION = "16"
-    PHP_VERSION = "8.1"
+    PHP_VERSION = "8.2"
 [deploy]
   release_command = "php /var/www/html/artisan migrate:fresh --seed --force"
 
