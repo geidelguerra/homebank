@@ -39,19 +39,24 @@ class HomeController extends Controller
         $report->setDateRange($selectedDateRange)->setDimension($dimension);
 
         return inertia('Home', [
-            'incomeVsExpense' => function () use ($report, $selectedDateRangePreset, $selectedDateRange) {
+            'incomeVsExpense' => function () use ($report, $selectedDateRangePreset, $selectedDateRange, $selectedCurrency) {
                 return [
                     'labels' => (new DateLabelsService())->fromPreset($selectedDateRangePreset, $selectedDateRange),
-                    // 'datasets' => $report->incomeVsExpense($selectedDateRange, $selectedCurrency->getKey(), $groupByDateFormat)
                     'datasets' => [
-                        // Income
-                        $report->setMetric(ReportMetric::Amount)->setFilters([
-                            ReportFilter::field(ReportField::Amount)->greaterThan(0),
-                        ])->series(ReportAggregateFunction::Sum),
-                        // Expenses
-                        $report->setMetric(ReportMetric::Amount)->setFilters([
-                            ReportFilter::field(ReportField::Amount)->lesserThan(0),
-                        ])->series(ReportAggregateFunction::Sum),
+                        [
+                            'label' => 'Income',
+                            'data' => $report->setMetric(ReportMetric::Amount)->setFilters([
+                                ReportFilter::field(ReportField::Amount)->greaterThan(0),
+                                ReportFilter::field(ReportField::Currency)->equals($selectedCurrency->getKey()),
+                            ])->series(ReportAggregateFunction::Sum)->map(fn ($val) => $val ? intval($val) : null),
+                        ],
+                        [
+                            'label' => 'Expense',
+                            'data' => $report->setMetric(ReportMetric::Amount)->setFilters([
+                                ReportFilter::field(ReportField::Amount)->lesserThan(0),
+                                ReportFilter::field(ReportField::Currency)->equals($selectedCurrency->getKey()),
+                            ])->series(ReportAggregateFunction::Sum)->map(fn ($val) => $val ? intval($val) * -1 : null),
+                        ]
                     ],
                 ];
             },

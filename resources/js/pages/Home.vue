@@ -19,11 +19,14 @@
       </div>
       <div>{{ selectedDateRange }}</div>
       <div class="grid row-auto grid-cols-2">
-        <LineChart
-          :data="incomeVsExpense"
-          :scale-formatter="moneyScaleFormatter"
-          class="w-full h-full"
-        />
+        <Card>
+          <Chart
+            type="line"
+            :data="incomeVsExpense"
+            :scale-formatter="moneyScaleFormatter"
+            :colors="['blue', 'red']"
+          />
+        </Card>
       </div>
     </div>
   </div>
@@ -31,11 +34,12 @@
 
 <script setup>
 import FormElement from '@/components/FormElement.vue'
-import LineChart from '@/components/LineChart.vue'
 import Select from '@/components/Select.vue'
 import { Inertia } from '@inertiajs/inertia'
 import { reactive, watch } from 'vue'
-import { formatMoney } from '@/utils'
+import { formatMoney, formatNumber } from '@/utils'
+import Card from '@/components/Card.vue'
+import Chart from '@/components/Chart.vue'
 
 const props = defineProps({
   incomeVsExpense: { type: Object, default: null },
@@ -60,10 +64,11 @@ const reloadWithFilters = () => Inertia.reload({
 
 const moneyScaleFormatter = (val) => {
   try {
-    val = formatMoney(val, props.selectedCurrency)
+    val = formatNumber(formatMoney(val, props.selectedCurrency))
 
     return `$${val}`
   } catch (error) {
+    console.log(error)
     return val
   }
 }

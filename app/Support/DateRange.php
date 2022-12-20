@@ -40,12 +40,12 @@ class DateRange implements Arrayable
     /**
      * @return string[]
      */
-    public function dates(CarbonInterval $interval, string $format): array
+    public function dates(CarbonInterval $interval, ?string $format = null): array
     {
         return collect(
             CarbonPeriod::between($this->startDate, $this->endDate)
                 ->interval($interval)
-                ->map(fn ($date) => $date->format($format))
+                ->map(fn ($date) => $format ? $date->format($format) : $date)
         )
             ->all();
     }
