@@ -59,7 +59,7 @@ import FormElement from '@/components/FormElement.vue'
 import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
 import Switch from '@/components/Switch.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 const form = useForm({
   email: '',

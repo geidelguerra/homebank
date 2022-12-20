@@ -52,9 +52,9 @@ import FormElement from '@/components/FormElement.vue'
 import Input from '@/components/Input.vue'
 import Select from '@/components/Select.vue'
 import Button from '@/components/Button.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const props = defineProps({
@@ -87,5 +87,5 @@ const deleteAccount = () => confirmDialog.value
     message: 'Deleting this account will delete any associated transactions. Proceed?',
     color: 'danger'
   })
-  .then(() => Inertia.delete(route('accounts.destroy', [props.account])))
+  .then(() => router.delete(route('accounts.destroy', [props.account])))
 </script>

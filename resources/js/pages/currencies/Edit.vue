@@ -61,9 +61,9 @@
 import FormElement from '@/components/FormElement.vue'
 import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const props = defineProps({
@@ -99,5 +99,5 @@ const deleteCurrency = () => confirmDialog.value
     message: 'Proceed to delete this currency?',
     color: 'danger'
   })
-  .then(() => Inertia.delete(route('currencies.destroy', [props.currency.code])))
+  .then(() => router.delete(route('currencies.destroy', [props.currency.code])))
 </script>

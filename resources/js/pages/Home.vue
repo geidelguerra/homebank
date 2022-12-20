@@ -23,7 +23,7 @@
         </Card>
       </div>
       <div class="grid row-auto grid-cols-2">
-        <Card>
+        <Card title="Income vs Expense">
           <Chart
             type="line"
             :data="incomeVsExpense"
@@ -39,7 +39,7 @@
 <script setup>
 import FormElement from '@/components/FormElement.vue'
 import Select from '@/components/Select.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { reactive, watch } from 'vue'
 import { formatMoney, formatNumber } from '@/utils'
 import Card from '@/components/Card.vue'
@@ -59,7 +59,7 @@ const filters = reactive({
   currency: props.selectedCurrency?.code
 })
 
-const reloadWithFilters = () => Inertia.reload({
+const reloadWithFilters = () => router.reload({
   data: {
     date_range_preset: filters.dateRangePreset,
     filtered_currency: filters.currency

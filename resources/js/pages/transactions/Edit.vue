@@ -73,9 +73,9 @@ import Input from '@/components/Input.vue'
 import Select from '@/components/Select.vue'
 import Button from '@/components/Button.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
   type: { type: String, default: 'expense' },
@@ -114,7 +114,7 @@ const deleteTransaction = () => confirmDialog.value
     message: 'Proceed to delete this transaction?',
     color: 'danger'
   })
-  .then(() => Inertia.delete(route('transactions.destroy', [props.transaction])))
+  .then(() => router.delete(route('transactions.destroy', [props.transaction])))
   .catch(() => {
     // Do nothing
   })

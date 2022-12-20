@@ -111,7 +111,7 @@ import Pagination from '@/components/Pagination.vue'
 import { ref, watch, reactive } from 'vue'
 import FormElement from '@/components/FormElement.vue'
 import Select from '@/components/Select.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const props = defineProps({
@@ -133,7 +133,7 @@ const filters = reactive({
   type: undefined
 })
 
-const reloadWithFilters = () => Inertia.reload({
+const reloadWithFilters = () => router.reload({
   data: {
     filtered_date_preset: filters.datePreset,
     filtered_type: filters.type,
@@ -148,7 +148,7 @@ const deleteTransaction = (transaction) => confirmDialog.value
     message: 'Proceed to delete this transaction?',
     color: 'danger'
   })
-  .then(() => Inertia.delete(route('transactions.destroy', [transaction])))
+  .then(() => router.delete(route('transactions.destroy', [transaction])))
 
 watch(filters, () => reloadWithFilters())
 </script>

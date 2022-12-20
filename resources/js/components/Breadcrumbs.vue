@@ -12,13 +12,13 @@
           ↦
         </li>
         <li>
-          <InertiaLink
+          <Link
             v-if="item.url"
             :href="item.url"
             class="transition-all text-sm text-slate-100 p-2 rounded hover:bg-black hover:text-white hover:bg-opacity-10"
           >
             {{ item.text }}
-          </InertiaLink>
+          </Link>
           <span
             v-else
             class="text-sm text-white p-2"
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { InertiaLink } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
   items: { type: Array, default: () => [] }

@@ -141,7 +141,7 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { ref, watch, computed } from 'vue'
 import Button from '@/components/Button.vue'
 import Dialog from '@/components/Dialog.vue'

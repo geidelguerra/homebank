@@ -33,7 +33,7 @@
               :key="item.url"
             >
               <li>
-                <InertiaLink
+                <Link
                   :href="item.url"
                   class="flex p-2 rounded transition-all text-sm text-slate-500 hover:text-slate-800 hover:bg-slate-300"
                   :class="{
@@ -41,7 +41,7 @@
                   }"
                 >
                   {{ item.text }}
-                </InertiaLink>
+                </Link>
               </li>
             </template>
           </ul>
@@ -72,8 +72,8 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Button from '@/components/Button.vue'
 import Dialog from '@/components/Dialog.vue';
-import { Inertia } from '@inertiajs/inertia'
-import { InertiaLink } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 import { ref, watch } from 'vue';
 
 const props = defineProps({
@@ -107,7 +107,7 @@ const menuItems = [
   }
 ]
 
-const logout = () => Inertia.post(route('logout'))
+const logout = () => router.post(route('logout'))
 
 watch(() => props.message, (val) => {
   isMessageDialogOpen.value = val !== null
