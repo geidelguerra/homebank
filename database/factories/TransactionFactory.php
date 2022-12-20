@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Support\TransactionType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,13 @@ class TransactionFactory extends Factory
             'date' => $this->faker->unique()->dateTimeThisYear(),
             'amount' => $this->faker->numberBetween(-10000, 10000),
             'description' => $this->faker->text(),
+            'type' => function ($attributes) {
+                if ($attributes['amount'] > 0) {
+                    return TransactionType::Income;
+                }
+
+                return TransactionType::Expense;
+            },
             'category_id' => CategoryFactory::new(),
             'account_id' => AccountFactory::new(),
         ];

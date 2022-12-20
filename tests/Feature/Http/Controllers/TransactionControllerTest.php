@@ -1,10 +1,12 @@
 <?php
 
+use App\Support\TransactionType;
 use Database\Factories\AccountFactory;
 use Database\Factories\CategoryFactory;
 use Database\Factories\TransactionFactory;
 use Database\Factories\UserFactory;
 use Inertia\Testing\AssertableInertia;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
@@ -74,6 +76,7 @@ test('create transaction', function () {
         'date' => '2022-12-09',
         'amount' => -18000,
         'description' => 'Un carton de huevos',
+        'type' => TransactionType::Expense->value,
         'category_id' => $category->id,
         'account_id' => $account->id,
     ]);
@@ -83,6 +86,7 @@ test('create transaction', function () {
             'date' => '2022-12-09',
             'amount' => -18000,
             'description' => 'Un carton de huevos',
+            'type' => TransactionType::Expense->value,
             'category_id' => $category->id,
             'account_id' => $account->id,
         ])->assertRedirect(route('transactions.index'));
@@ -91,6 +95,7 @@ test('create transaction', function () {
         'date' => '2022-12-09',
         'amount' => -18000,
         'description' => 'Un carton de huevos',
+        'type' => TransactionType::Expense->value,
         'category_id' => $category->id,
         'account_id' => $account->id,
     ]);

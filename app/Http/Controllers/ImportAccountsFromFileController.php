@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Transaction;
+use App\Support\TransactionType;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -23,16 +24,29 @@ class ImportAccountsFromFileController extends Controller
             ->slice(intval($request->input('ignored_rows', 0)))
             ->each(function ($data) use ($request) {
                 Model::withoutEvents(function () use ($data, $request) {
-                    Transaction::query()->create([
-                        'date' => $this->parseDate($data[intval($request->input('date_column'))], 'America/Havana'),
-                        'description' => $data[intval($request->input('description_column'))],
-                        'amount' => $this->parseAmount((string) $data[intval($request->input('amount_column'))]),
-                        'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->input('category_column'))]])->getKey(),
-                        'account_id' => Account::query()->firstOrCreate([
-                            'name' => $data[intval($request->input('account_column'))],
-                            'currency_code' => Currency::query()->firstOrCreate(['code' => 'USD'])->getKey(),
-                        ])->getKey(),
-                    ])->save();
+                    $amount = $this->parseAmount((string) $data[intval($request->input('amount_column'))]);
+
+                    try {
+                        DB::beginTransaction();
+
+                        Transaction::query()->create([
+                            'date' => $this->parseDate($data[intval($request->input('date_column'))], 'America/Havana'),
+                            'description' => $data[intval($request->input('description_column'))],
+                            'amount' => $amount,
+                            'type' => $amount > 0 ? TransactionType::Income : TransactionType::Expense,
+                            'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->input('category_column'))]])->getKey(),
+                            'account_id' => Account::query()->firstOrCreate([
+                                'name' => $data[intval($request->input('account_column'))],
+                                'currency_code' => Currency::query()->firstOrCreate(['code' => 'USD'])->getKey(),
+                            ])->getKey(),
+                        ])->save();
+
+                        DB::commit();
+                    } catch (\Throwable $th) {
+                        DB::rollBack();
+
+                        logger()->error('Error importing accounts from file: ' . $th->getMessage(), [$th->getTraceAsString()]);
+                    }
                 });
             });
 

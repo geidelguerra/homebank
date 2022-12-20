@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Account;
+use App\Support\TransactionType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\Validator;
 
 class StoreTransactionRequest extends FormRequest
@@ -26,6 +28,10 @@ class StoreTransactionRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:500',
+            ],
+            'type' => [
+                'required',
+                new Enum(TransactionType::class)
             ],
             'category_id' => [
                 'required',
