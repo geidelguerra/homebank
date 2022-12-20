@@ -23,33 +23,12 @@ class DatabaseSeeder extends Seeder
 
         Currency::create(['code' => 'USD', 'base' => [10], 'exponent' => 2]);
         Currency::create(['code' => 'EUR', 'base' => [10], 'exponent' => 2]);
+        Currency::create(['code' => 'CUP', 'base' => [10], 'exponent' => 2]);
+        Currency::create(['code' => 'MLC', 'base' => [10], 'exponent' => 2]);
 
         Category::create(['name' => 'Food']);
         Category::create(['name' => 'Electricity']);
         Category::create(['name' => 'Salary']);
         Category::create(['name' => 'Rent']);
-
-        // if (app()->environment('local')) {
-        //     $account = AccountFactory::new()->createOne([
-        //         'name' => 'Test account',
-        //         'currency_code' => Currency::where('code', 'USD')->first()->code,
-        //     ]);
-
-        //     TransactionFactory::times(12)
-        //         ->for($account)
-        //         ->for(Category::where('name', 'Salary')->first())
-        //         ->create([
-        //             'amount' => 90000
-        //         ]);
-
-        //     TransactionFactory::times(12)
-        //         ->for($account)
-        //         ->for(Category::where('name', 'Food')->first())
-        //         ->create([
-        //             'amount' => -30000
-        //         ]);
-
-        //     $account->updateAmount()->save();
-        // }
     }
 }

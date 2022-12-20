@@ -23,7 +23,33 @@ class ImportAccountsFromFileRequest extends FormRequest
             ],
             'date_column' => [
                 'required',
+                'integer',
+                'min:0'
             ],
+            'category_column' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+            'description_column' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+            'amount_column' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+            'account_column' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+            'date_timezone' => [
+                'nullable',
+                'timezone'
+            ]
         ];
     }
 }

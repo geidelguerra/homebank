@@ -24,19 +24,19 @@ class ImportAccountsFromFileController extends Controller
             ->slice(intval($request->input('ignored_rows', 0)))
             ->each(function ($data) use ($request) {
                 Model::withoutEvents(function () use ($data, $request) {
-                    $amount = $this->parseAmount((string) $data[intval($request->input('amount_column'))]);
+                    $amount = $this->parseAmount((string) $data[intval($request->validated('amount_column'))]);
 
                     try {
                         DB::beginTransaction();
 
                         Transaction::query()->create([
-                            'date' => $this->parseDate($data[intval($request->input('date_column'))], 'America/Havana'),
-                            'description' => $data[intval($request->input('description_column'))],
+                            'date' => $this->parseDate($data[intval($request->validated('date_column'))], $request->validated('date_timezone')),
+                            'description' => $data[intval($request->validated('description_column'))],
                             'amount' => $amount,
                             'type' => $amount > 0 ? TransactionType::Income : TransactionType::Expense,
-                            'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->input('category_column'))]])->getKey(),
+                            'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->validated('category_column'))]])->getKey(),
                             'account_id' => Account::query()->firstOrCreate([
-                                'name' => $data[intval($request->input('account_column'))],
+                                'name' => $data[intval($request->validated('account_column'))],
                                 'currency_code' => Currency::query()->firstOrCreate(['code' => 'USD'])->getKey(),
                             ])->getKey(),
                         ])->save();

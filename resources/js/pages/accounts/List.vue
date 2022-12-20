@@ -34,6 +34,7 @@
   </div>
   <ImportAccountsFromFileDialog
     :open="isImportFromFileOpen"
+    :available-timezones="availableTimezones"
     @close="isImportFromFileOpen = false"
   />
 </template>
@@ -45,7 +46,8 @@ import ImportAccountsFromFileDialog from '@/components/ImportAccountsFromFileDia
 import { ref } from 'vue';
 
 const props = defineProps({
-  accounts: { type: Array, default: null }
+  accounts: { type: Array, default: null },
+  availableTimezones: { type: Array, default: () => [] }
 })
 
 const isImportFromFileOpen = ref(false)

@@ -37,63 +37,75 @@
 
     <form
       v-if="parsedData && parsedData.length > 0"
-      class="grid row-auto grid-cols-3 gap-4"
       @submit.prevent="submit"
     >
-      <FormElement label="Ignored rows">
-        <Input
-          v-model="form.ignored_rows"
-          :disabled="form.processing"
-          type="number"
-          step="1"
-          min="0"
-        />
-      </FormElement>
-      <FormElement label="Date column">
-        <Select
-          v-model="form.date_column"
-          :items="availableColumns"
-          :disabled="form.processing"
-          item-key="index"
-          item-value="value"
-        />
-      </FormElement>
-      <FormElement label="Category column">
-        <Select
-          v-model="form.category_column"
-          :items="availableColumns"
-          :disabled="form.processing"
-          item-key="index"
-          item-value="value"
-        />
-      </FormElement>
-      <FormElement label="Description column">
-        <Select
-          v-model="form.description_column"
-          :items="availableColumns"
-          :disabled="form.processing"
-          item-key="index"
-          item-value="value"
-        />
-      </FormElement>
-      <FormElement label="Amount column">
-        <Select
-          v-model="form.amount_column"
-          :items="availableColumns"
-          :disabled="form.processing"
-          item-key="index"
-          item-value="value"
-        />
-      </FormElement>
-      <FormElement label="Account column">
-        <Select
-          v-model="form.account_column"
-          :items="availableColumns"
-          :disabled="form.processing"
-          item-key="index"
-          item-value="value"
-        />
-      </FormElement>
+      <div class="grid row-auto grid-cols-3 gap-4">
+        <FormElement label="Ignored rows">
+          <Input
+            v-model="form.ignored_rows"
+            :disabled="form.processing"
+            type="number"
+            step="1"
+            min="0"
+          />
+        </FormElement>
+      </div>
+      <div class="grid row-auto grid-cols-3 gap-4">
+        <FormElement label="Date column">
+          <Select
+            v-model="form.date_column"
+            :items="availableColumns"
+            :disabled="form.processing"
+            item-key="index"
+            item-value="value"
+          />
+        </FormElement>
+        <FormElement label="Date timezone">
+          <Select
+            v-model="form.date_timezone"
+            :items="availableTimezones"
+            :disabled="form.processing"
+            item-key="index"
+            item-value="value"
+          />
+        </FormElement>
+        <FormElement label="Category column">
+          <Select
+            v-model="form.category_column"
+            :items="availableColumns"
+            :disabled="form.processing"
+            item-key="index"
+            item-value="value"
+          />
+        </FormElement>
+        <FormElement label="Description column">
+          <Select
+            v-model="form.description_column"
+            :items="availableColumns"
+            :disabled="form.processing"
+            item-key="index"
+            item-value="value"
+          />
+        </FormElement>
+        <FormElement label="Amount column">
+          <Select
+            v-model="form.amount_column"
+            :items="availableColumns"
+            :disabled="form.processing"
+            item-key="index"
+            item-value="value"
+          />
+        </FormElement>
+        <FormElement label="Account column">
+          <Select
+            v-model="form.account_column"
+            :items="availableColumns"
+            :disabled="form.processing"
+            item-key="index"
+            item-value="value"
+          />
+        </FormElement>
+      </div>
     </form>
     <template #footer>
       <Button
@@ -138,6 +150,9 @@ import Select from '@/components/Select.vue'
 import Input from '@/components/Input.vue'
 import CSVParser from 'papaparse'
 
+const props = defineProps({
+  availableTimezones: { type: Array, default: () => [] }
+})
 const fileInput = ref(null)
 
 const parsedData = ref([])
@@ -148,6 +163,7 @@ const form = useForm({
   file: undefined,
   ignored_rows: 1,
   date_column: undefined,
+  date_timezone: 'UTC',
   category_column: undefined,
   description_column: undefined,
   amount_column: undefined,

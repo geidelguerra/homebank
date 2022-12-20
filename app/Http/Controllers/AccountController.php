@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
 use App\Models\Currency;
+use DateTimeZone;
 
 class AccountController extends Controller
 {
@@ -15,6 +16,9 @@ class AccountController extends Controller
             'accounts' => function () {
                 return Account::query()->latest()->with('currency')->get();
             },
+            'availableTimezones' => function () {
+                return DateTimeZone::listIdentifiers();
+            }
         ]);
     }
 
