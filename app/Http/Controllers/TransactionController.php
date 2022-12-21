@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTransactionRequest;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Support\TransactionType;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -95,8 +96,11 @@ class TransactionController extends Controller
         ]);
 
         return inertia('transactions/Edit', [
+            'availableTypes' => function () {
+                return TransactionType::cases();
+            },
             'availableAccounts' => function () {
-                return Account::query()->orderBy('name')->get();
+                return Account::query()->with('currency')->orderBy('name')->get();
             },
             'availableCategories' => function () {
                 return Category::query()->orderBy('name')->get();
@@ -134,9 +138,12 @@ class TransactionController extends Controller
         ]);
 
         return inertia('transactions/Edit', [
-            'transaction' => $transaction->load(['account', 'category']),
+            'transaction' => $transaction->load(['account.currency', 'category']),
+            'availableTypes' => function () {
+                return TransactionType::cases();
+            },
             'availableAccounts' => function () {
-                return Account::query()->orderBy('name')->get();
+                return Account::query()->with('currency')->orderBy('name')->get();
             },
             'availableCategories' => function () {
                 return Category::query()->orderBy('name')->get();

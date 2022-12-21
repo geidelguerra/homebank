@@ -74,7 +74,7 @@
                 {{ transaction.account.name }}
               </div>
               <div class="font-bold">
-                {{ formatMoney(transaction.amount, transaction.account.currency) }} {{ transaction.account.currency_code }}
+                {{ $money(transaction.amount, transaction.account.currency).toDecimal() }} {{ transaction.account.currency_code }}
               </div>
             </div>
           </div>

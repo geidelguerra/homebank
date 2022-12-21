@@ -41,7 +41,7 @@ import FormElement from '@/components/FormElement.vue'
 import Select from '@/components/Select.vue'
 import { router } from '@inertiajs/vue3'
 import { reactive, watch } from 'vue'
-import { formatMoney, formatNumber } from '@/utils'
+import { formatMoney, formatNumber, money } from '@/utils'
 import Card from '@/components/Card.vue'
 import Chart from '@/components/Chart.vue'
 
@@ -68,7 +68,7 @@ const reloadWithFilters = () => router.reload({
 
 const moneyScaleFormatter = (val) => {
   try {
-    val = formatNumber(formatMoney(val, props.selectedCurrency))
+    val = formatNumber(money(val, props.selectedCurrency).toDecimal())
 
     return `$${val}`
   } catch (error) {

@@ -26,7 +26,7 @@
               {{ account.name }}
             </div>
             <div class="flex-1" />
-            <div>{{ formatMoney(account.amount, account.currency) }} {{ account.currency_code }}</div>
+            <div>{{ $money(account.amount, account.currency).toDecimal() }} {{ account.currency_code }}</div>
           </div>
         </Card>
       </template>
