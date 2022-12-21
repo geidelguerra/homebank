@@ -10,6 +10,16 @@ export const formatDate = (date, format, options = {}) => {
   return date ? baseFormatDate(date, format, options) : date
 }
 
+export const date = (val) => {
+  if (typeof val === 'string') {
+    val = new Date(val)
+  }
+
+  return {
+    format: (format, options = {}) => baseFormatDate(val, format, options)
+  }
+}
+
 export const money = (amount, currency = USD) => {
   amount = parseInt(amount)
 

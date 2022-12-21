@@ -19,7 +19,7 @@
       </div>
       <div class="grid grid-cols-2">
         <Card class="shadow-none text-center">
-          <span class="text-sm font-medium text-slate-500">{{ formatDate(selectedDateRange.startDate, 'd MMM Y (z)') }} - {{ formatDate(selectedDateRange.endDate, 'd MMM Y (z)') }}</span>
+          <span class="text-sm font-medium text-slate-500">{{ $date(selectedDateRange.startDate).format('PPPP') }} - {{ $date(selectedDateRange.endDate).format('PPPP') }}</span>
         </Card>
       </div>
       <div class="grid row-auto grid-cols-2">
@@ -41,7 +41,7 @@ import FormElement from '@/components/FormElement.vue'
 import Select from '@/components/Select.vue'
 import { router } from '@inertiajs/vue3'
 import { reactive, watch } from 'vue'
-import { formatMoney, formatNumber, money } from '@/utils'
+import { formatNumber, money } from '@/utils'
 import Card from '@/components/Card.vue'
 import Chart from '@/components/Chart.vue'
 

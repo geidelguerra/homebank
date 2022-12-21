@@ -16,7 +16,7 @@
         :error="form.errors.date"
       >
         <Input
-          :value="formatDate(form.date, 'yyyy-MM-dd')"
+          :value="$date(form.date).format('yyyy-MM-dd')"
           type="date"
           @input="form.date = $event.target.value"
         />

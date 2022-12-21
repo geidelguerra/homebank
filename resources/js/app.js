@@ -2,7 +2,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import App from '@/layouts/App.vue'
-import { formatDate, formatMoney, money } from '@/utils'
+import { formatDate, formatMoney, date, money } from '@/utils'
 
 // Uncomment this  if you are using Laravel Echo
 // import { Inertia } from '@inertiajs/inertia'
@@ -26,6 +26,7 @@ createInertiaApp({
         install(app) {
           app.config.globalProperties.route = window.route
           app.config.globalProperties.formatDate = formatDate
+          app.config.globalProperties.$date = date
           app.config.globalProperties.$money = money
           app.config.globalProperties.formatMoney = formatMoney
         }

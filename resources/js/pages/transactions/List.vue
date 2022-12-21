@@ -61,8 +61,8 @@
         >
           <div class="flex items-center mb-2">
             <div>
-              <div class="text-sm text-left">
-                {{ formatDate(new Date(transaction.date), 'P') }} ({{ transaction.date }})
+              <div class="text-sm text-left font-medium text-slate-600">
+                {{ $date(transaction.date).format('PPPP (xx)') }}
               </div>
               <div class="text-left">
                 {{ transaction.category.name }}
@@ -73,7 +73,13 @@
               <div class="text-sm">
                 {{ transaction.account.name }}
               </div>
-              <div class="font-bold">
+              <div
+                class="font-bold"
+                :class="{
+                  'text-red-600': transaction.amount < 0,
+                  'text-green-600': transaction.amount > 0,
+                }"
+              >
                 {{ $money(transaction.amount, transaction.account.currency).toDecimal() }} {{ transaction.account.currency_code }}
               </div>
             </div>
