@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Currency;
+use App\Services\MoneyExchangeService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,5 +27,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Model::unguard();
+
+        $this->app->bind(MoneyExchangeService::class, function () {
+            return new MoneyExchangeService(Currency::query()->get()->all());
+        });
     }
 }

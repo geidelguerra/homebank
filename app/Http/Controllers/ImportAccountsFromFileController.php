@@ -33,7 +33,6 @@ class ImportAccountsFromFileController extends Controller
                             'date' => $this->parseDate($data[intval($request->validated('date_column'))], $request->validated('date_timezone')),
                             'description' => $data[intval($request->validated('description_column'))],
                             'amount' => $amount,
-                            'type' => $amount > 0 ? TransactionType::Income : TransactionType::Expense,
                             'category_id' => Category::query()->firstOrCreate(['name' => $data[intval($request->validated('category_column'))]])->getKey(),
                             'account_id' => Account::query()->firstOrCreate([
                                 'name' => $data[intval($request->validated('account_column'))],

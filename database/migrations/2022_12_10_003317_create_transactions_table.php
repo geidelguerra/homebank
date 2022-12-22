@@ -13,7 +13,6 @@ return new class () extends Migration {
             $table->date('date');
             $table->integer('amount');
             $table->text('description')->nullable();
-            $table->string('type');
             $table->foreignId('category_id');
             $table->foreignId('account_id');
         });

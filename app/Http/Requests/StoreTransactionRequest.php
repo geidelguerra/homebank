@@ -29,10 +29,6 @@ class StoreTransactionRequest extends FormRequest
                 'string',
                 'max:500',
             ],
-            'type' => [
-                'required',
-                new Enum(TransactionType::class)
-            ],
             'category_id' => [
                 'required',
                 'exists:categories,id',

@@ -2,7 +2,7 @@
   <div class="p-4">
     <div class="mb-4 max-w-md">
       <ToggleButtonGroup
-        v-model="form.type"
+        v-model="selectedType"
         :items="availableTypes"
       />
     </div>
@@ -107,10 +107,11 @@ const exists = computed(() => props.transaction?.id !== undefined)
 
 const selectedAccount = computed(() => props.availableAccounts.find((account) => account.id === form.account_id))
 
+const selectedType = ref(props.transaction?.amount > 0 ? 'Income' : 'Expense')
+
 const form = useForm({
   date: (props.transaction ? new Date(props.transaction.date) : new Date()).toISOString().split('T')[0],
-  amount: money((props.transaction?.amount || 0) * (props.transaction?.type === 'Income' ? 1 : -1), props.transactions?.currency || USD).toDecimal(),
-  type: props.transaction?.type || 'Expense',
+  amount: money(Math.abs(props.transaction?.amount || 0), props.transactions?.currency || USD).toDecimal(),
   category_id: props.transaction?.category_id,
   account_id: props.transaction?.account_id,
 })
@@ -118,7 +119,7 @@ const form = useForm({
 const submit = () => {
   form.clearErrors().transform((data) => ({
     ...data,
-    amount: parseMoney(data.amount * (data.type === 'Income' ? 1 : -1), selectedAccount.value?.currency || USD).toSnapshot().amount
+    amount: parseMoney(data.amount * (selectedType.value === 'Income' ? 1 : -1), selectedAccount.value?.currency || USD).toSnapshot().amount
   }))
 
   if (exists.value) {

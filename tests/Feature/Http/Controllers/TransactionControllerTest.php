@@ -76,7 +76,6 @@ test('create transaction', function () {
         'date' => '2022-12-09',
         'amount' => -18000,
         'description' => 'Un carton de huevos',
-        'type' => TransactionType::Expense->value,
         'category_id' => $category->id,
         'account_id' => $account->id,
     ]);
@@ -86,7 +85,6 @@ test('create transaction', function () {
             'date' => '2022-12-09',
             'amount' => -18000,
             'description' => 'Un carton de huevos',
-            'type' => TransactionType::Expense->value,
             'category_id' => $category->id,
             'account_id' => $account->id,
         ])->assertRedirect(route('transactions.index'));
@@ -95,7 +93,6 @@ test('create transaction', function () {
         'date' => '2022-12-09',
         'amount' => -18000,
         'description' => 'Un carton de huevos',
-        'type' => TransactionType::Expense->value,
         'category_id' => $category->id,
         'account_id' => $account->id,
     ]);

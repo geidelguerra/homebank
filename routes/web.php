@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [LoginController::class, 'showLogin'])->name('login.show');
@@ -25,6 +26,8 @@ Route::middleware('auth:web')->group(function () {
     Route::resource('transactions', TransactionController::class);
 
     Route::resource('currencies', CurrencyController::class);
+
+    Route::resource('transfers', TransferController::class);
 
     Route::get('reports/series', [ReportController::class, 'series']);
 });
