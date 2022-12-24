@@ -10,6 +10,7 @@ return new class () extends Migration {
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->date('date');
             $table->unsignedBigInteger('amount');
             $table->unsignedFloat('exchange_rate');
             $table->unsignedBigInteger('source_transaction_id');

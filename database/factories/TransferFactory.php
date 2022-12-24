@@ -15,7 +15,11 @@ class TransferFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'date' => $this->faker->dateTimeThisYear(),
+            'amount' => $this->faker->numberBetween(100, 1000),
+            'exchange_rate' => 1,
+            'source_transaction_id' => TransactionFactory::new(),
+            'destination_transaction_id' => TransactionFactory::new(),
         ];
     }
 }

@@ -3,97 +3,57 @@
     <div class="mb-4 flex justify-between">
       <Button
         color="primary"
-        @click="$inertia.visit(route('transactions.create'))"
+        @click="$inertia.visit(route('transfers.create'))"
       >
-        Add transaction
-      </Button>
-      <Button @click="isFiltersOpen = !isFiltersOpen">
-        {{ isFiltersOpen ? 'Hide filters' : 'Show filters' }}
+        Add transfer
       </Button>
     </div>
-    <Card
-      v-if="isFiltersOpen"
-      title="Filters"
-      class="mb-4"
-    >
-      <div class="grid row-auto grid-cols-4 gap-4">
-        <FormElement label="By date">
-          <Select
-            v-model="filters.datePreset"
-            nullable
-            :items="availableDatePresets"
-          />
-        </FormElement>
-        <FormElement label="By account">
-          <Select
-            v-model="filters.accounts"
-            multiple
-            nullable
-            :items="availableAccounts"
-          />
-        </FormElement>
-        <FormElement label="By category">
-          <Select
-            v-model="filters.categories"
-            multiple
-            nullable
-            :items="availableCategories"
-          />
-        </FormElement>
-        <FormElement label="By type">
-          <Select
-            v-model="filters.type"
-            nullable
-            :items="availableTypes"
-          />
-        </FormElement>
-      </div>
-    </Card>
+
     <div class="flex flex-col space-y-2 flex-1 pb-[36px]">
       <template
-        v-for="transaction in transactions.data"
-        :key="transaction.id"
+        v-for="transfer in transfers.data"
+        :key="transfer.id"
       >
         <Card
           tag="button"
           class="border-2 border-transparent hover:border-indigo-500"
-          @click="$inertia.visit(route('transactions.edit', [transaction]))"
+          @click="$inertia.visit(route('transfers.edit', [transfer]))"
         >
           <div class="flex items-center mb-2">
             <div>
               <div class="text-sm text-left font-medium text-slate-600">
-                {{ $date(transaction.date).format('PPPP (xx)') }}
+                {{ $date(transfer.date).format('PPPP (xx)') }}
               </div>
               <div class="text-left">
-                {{ transaction.category.name }}
+                {{ transfer.category.name }}
               </div>
             </div>
             <div class="flex-1" />
             <div class="flex flex-col items-end">
               <div class="text-sm">
-                {{ transaction.account.name }}
+                {{ transfer.account.name }}
               </div>
               <div
                 class="font-bold"
                 :class="{
-                  'text-red-600': transaction.amount < 0,
-                  'text-green-600': transaction.amount > 0,
+                  'text-red-600': transfer.amount < 0,
+                  'text-green-600': transfer.amount > 0,
                 }"
               >
-                {{ $money(transaction.amount, transaction.account.currency).toDecimal() }} {{ transaction.account.currency_code }}
+                {{ $money(transfer.amount, transfer.account.currency).toDecimal() }} {{ transfer.account.currency_code }}
               </div>
             </div>
           </div>
           <div class="flex space-x-1">
             <div class="text-left text-sm text-slate-600 flex-1">
-              {{ transaction.description }}
+              {{ transfer.description }}
             </div>
             <div>
               <Button
                 color="danger"
-                @click.stop="deleteTransaction(transaction)"
+                @click.stop="deleteTransaction(transfer)"
               >
-                Delete transaction
+                Delete transfer
               </Button>
             </div>
           </div>
@@ -102,9 +62,9 @@
     </div>
     <div class="fixed bottom-0 p-2 left-80 right-0 bg-[#E7E9F2] flex space-x-2 items-center">
       <div class="text-xs font-medium flex-1">
-        Page {{ transactions.current_page }} of {{ transactions.last_page }} ({{ transactions.per_page }} items per page) - Showing {{ transactions.total }} items
+        Page {{ transfers.current_page }} of {{ transfers.last_page }} ({{ transfers.per_page }} items per page) - Showing {{ transfers.total }} items
       </div>
-      <Pagination :links="transactions.links" />
+      <Pagination :links="transfers.links" />
     </div>
   </div>
   <ConfirmDialog ref="confirmDialog" />
@@ -121,7 +81,7 @@ import { router } from '@inertiajs/vue3'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const props = defineProps({
-  transactions: { type: Object, default: null },
+  transfers: { type: Object, default: null },
   availableDatePresets: { type: Array, default: () => [] },
   availableAccounts: { type: Array, default: () => [] },
   availableCategories: { type: Array, default: () => [] },
@@ -148,13 +108,13 @@ const reloadWithFilters = () => router.reload({
   }
 })
 
-const deleteTransaction = (transaction) => confirmDialog.value
+const deleteTransaction = (transfer) => confirmDialog.value
   .show({
     title: 'Warning',
-    message: 'Proceed to delete this transaction?',
+    message: 'Proceed to delete this transfer?',
     color: 'danger'
   })
-  .then(() => router.delete(route('transactions.destroy', [transaction])))
+  .then(() => router.delete(route('transfers.destroy', [transfer])))
 
 watch(filters, () => reloadWithFilters())
 </script>
