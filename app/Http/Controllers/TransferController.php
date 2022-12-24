@@ -30,34 +30,34 @@ class TransferController extends Controller
             DB::beginTransaction();
 
             $sourceTransaction = new Transaction([
-                'date' => $request->safe()->input('date'),
-                'amount' => $request->safe()->integer('amount') * -1,
-                'account_id' => $request->safe()->input('source_account_id'),
-                'category_id' => $request->safe()->input('category_id'),
+                'date' => $request->input('date'),
+                'amount' => $request->integer('amount') * -1,
+                'account_id' => $request->input('source_account_id'),
+                'category_id' => $request->input('category_id'),
             ]);
 
             $sourceTransaction->save();
             $sourceAccount->updateAmount()->save();
 
             $destinationTransaction = new Transaction([
-                'date' => $request->safe()->input('date'),
+                'date' => $request->input('date'),
                 'amount' => $moneyExchange->convert(
-                    $request->safe()->integer('amount'),
+                    $request->integer('amount'),
                     $sourceAccount->currency_code,
                     $destinationAccount->currency_code,
-                    $request->safe()->float('exchange_rate')
+                    $request->float('exchange_rate')
                 )->getAmount(),
-                'account_id' => $request->safe()->input('destination_account_id'),
-                'category_id' => $request->safe()->input('category_id'),
+                'account_id' => $request->input('destination_account_id'),
+                'category_id' => $request->input('category_id'),
             ]);
 
             $destinationTransaction->save();
             $destinationAccount->updateAmount()->save();
 
             $transfer = new Transfer([
-                'date' => $request->safe()->input('date'),
-                'amount' => $request->safe()->input('amount'),
-                'exchange_rate' => $request->safe()->input('exchange_rate'),
+                'date' => $request->input('date'),
+                'amount' => $request->input('amount'),
+                'exchange_rate' => $request->input('exchange_rate'),
                 'source_transaction_id' => $sourceTransaction->getKey(),
                 'destination_transaction_id' => $destinationTransaction->getKey(),
             ]);
@@ -80,17 +80,17 @@ class TransferController extends Controller
             DB::beginTransaction();
 
             $transfer->sourceTransaction->fill([
-                'amount' => $request->safe()->integer('amount') * -1
+                'amount' => $request->integer('amount') * -1
             ])->save();
 
             $transfer->sourceTransaction->account->updateAmount()->save();
 
             $transfer->destinationTransaction->fill([
                 'amount' => $moneyExchange->convert(
-                    $request->safe()->integer('amount'),
+                    $request->integer('amount'),
                     $transfer->sourceTransaction->account->currency_code,
                     $transfer->destinationTransaction->account->currency_code,
-                    $request->safe()->float('exchange_rate')
+                    $request->float('exchange_rate')
                 )->getAmount()
             ])->save();
 
