@@ -72,9 +72,9 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Button from '@/components/Button.vue'
 import Dialog from '@/components/Dialog.vue';
-import { router } from '@inertiajs/vue3'
 import { Link } from '@inertiajs/vue3'
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { router } from '@inertiajs/core';
 
 const props = defineProps({
   auth: { type: Object, default: null },
@@ -101,6 +101,11 @@ const menuItems = [
     active: () => route().current('transactions.index')
   },
   {
+    text: 'Transfers',
+    url: route('transfers.index'),
+    active: () => route().current('transfers.index')
+  },
+  {
     text: 'Currencies',
     url: route('currencies.index'),
     active: () => route().current('currencies.index')
@@ -109,7 +114,47 @@ const menuItems = [
 
 const logout = () => router.post(route('logout'))
 
+const subscribeToRealtimeEvents = (auth) => {
+  window.Echo.private(`users.${auth.id}`)
+    .listenToAll((eventName, data) => {
+      console.log("Event ::  " + eventName + ", data is ::" + JSON.stringify(data));
+    })
+    .listen('RefreshUI', () => {
+      router.reload({ preserveScroll: true, preserveState: true })
+    })
+}
+
+const unsubscribeFromRealtimeEvents = (auth) => {
+  window.Echo.leaveChannel(`private:users.${auth.id}`)
+}
+
 watch(() => props.message, (val) => {
   isMessageDialogOpen.value = val !== null
+})
+
+watch(() => props.auth, (auth, oldAuth) => {
+  if (auth?.id === oldAuth?.id) {
+    return
+  }
+
+  if (oldAuth) {
+    unsubscribeFromRealtimeEvents(oldAuth)
+  }
+
+  if (auth) {
+    subscribeToRealtimeEvents(auth)
+  }
+})
+
+onMounted(() => {
+  if (props.auth) {
+    subscribeToRealtimeEvents(props.auth)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (props.auth) {
+    unsubscribeFromRealtimeEvents(props.auth)
+  }
 })
 </script>

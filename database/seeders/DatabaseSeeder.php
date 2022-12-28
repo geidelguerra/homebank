@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Account;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\User;
-use Database\Factories\AccountFactory;
-use Database\Factories\TransactionFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,5 +27,6 @@ class DatabaseSeeder extends Seeder
         Category::create(['name' => 'Electricity']);
         Category::create(['name' => 'Salary']);
         Category::create(['name' => 'Rent']);
+        Category::create(['name' => 'Transfer']);
     }
 }

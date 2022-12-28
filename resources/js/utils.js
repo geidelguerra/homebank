@@ -2,14 +2,6 @@ import { dinero, toDecimal as baseToDecimal, toSnapshot as baseToSnapshop, toSna
 import { format as baseFormatDate } from 'date-fns'
 import { USD } from '@dinero.js/currencies'
 
-export const formatDate = (date, format, options = {}) => {
-  if (typeof date === 'string') {
-    date = new Date(date)
-  }
-
-  return date ? baseFormatDate(date, format, options) : date
-}
-
 export const date = (val) => {
   if (typeof val === 'string') {
     val = new Date(val)

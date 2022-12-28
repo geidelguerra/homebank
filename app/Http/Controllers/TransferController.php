@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Account;
+use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\Transfer;
 use App\Services\MoneyExchangeService;
@@ -21,6 +22,31 @@ class TransferController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        inertia()->share('breadcrumbs', [
+            [
+                'text' => 'Transfers',
+                'url' => route('transfers.index'),
+            ],
+            [
+                'text' => 'Add transfer',
+            ],
+        ]);
+
+        return inertia('transfers/Edit', [
+            'transfer' => [
+                'exchange_rate' => 1
+            ],
+            'availableCategories' => function () {
+                return Category::query()->orderByDesc('name')->get();
+            },
+            'availableAccounts' => function () {
+                return Account::query()->orderByDesc('name')->get();
+            }
+        ]);
+    }
+
     public function store(StoreTransferRequest $request, MoneyExchangeService $moneyExchange)
     {
         $sourceAccount = Account::query()->with('currency')->find($request->input('source_account_id'));
@@ -29,11 +55,13 @@ class TransferController extends Controller
         try {
             DB::beginTransaction();
 
+            $category = Category::getOrCreateTransferCategory();
+
             $sourceTransaction = new Transaction([
                 'date' => $request->input('date'),
                 'amount' => $request->integer('amount') * -1,
                 'account_id' => $request->input('source_account_id'),
-                'category_id' => $request->input('category_id'),
+                'category_id' => $category->getKey(),
             ]);
 
             $sourceTransaction->save();
@@ -48,7 +76,7 @@ class TransferController extends Controller
                     $request->float('exchange_rate')
                 )->getAmount(),
                 'account_id' => $request->input('destination_account_id'),
-                'category_id' => $request->input('category_id'),
+                'category_id' => $category->getKey(),
             ]);
 
             $destinationTransaction->save();
@@ -72,6 +100,19 @@ class TransferController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function edit(Transfer $transfer)
+    {
+        return inertia('transfers/Edit', [
+            'transfer' => $transfer,
+            'availableCategories' => function () {
+                return Category::query()->orderByDesc('name')->get();
+            },
+            'availableAccounts' => function () {
+                return Account::query()->orderByDesc('name')->get();
+            }
+        ]);
     }
 
     public function update(UpdateTransferRequest $request, MoneyExchangeService $moneyExchange, Transfer $transfer)

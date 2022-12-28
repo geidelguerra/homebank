@@ -1,15 +1,29 @@
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
+import { router } from '@inertiajs/core'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import App from '@/layouts/App.vue'
-import { formatDate, formatMoney, date, money } from '@/utils'
+import { date, money } from '@/utils'
+import Echo from '@ably/laravel-echo';
+import * as Ably from 'ably';
 
-// Uncomment this  if you are using Laravel Echo
-// import { Inertia } from '@inertiajs/inertia'
+window.Ably = Ably
 
-// Inertia.on('before', (event) => {
-//   event.detail.visit.headers['X-Socket-ID'] = window.Echo.socketId()
-// })
+window.Echo = new Echo({
+  broadcaster: 'ably'
+});
+
+window.Echo.connector.ably.connection.on(stateChange => {
+  console.log('window.Echo.connector.ably.connection.on:', stateChange)
+
+  if (stateChange.current === 'connected') {
+    console.log('connected to ably server');
+  }
+});
+
+router.on('before', (event) => {
+  event.detail.visit.headers['X-Socket-ID'] = window.Echo.socketId()
+})
 
 createInertiaApp({
   resolve: async (name) => {
@@ -25,10 +39,8 @@ createInertiaApp({
       .use({
         install(app) {
           app.config.globalProperties.route = window.route
-          app.config.globalProperties.formatDate = formatDate
           app.config.globalProperties.$date = date
           app.config.globalProperties.$money = money
-          app.config.globalProperties.formatMoney = formatMoney
         }
       })
       .mount(el)

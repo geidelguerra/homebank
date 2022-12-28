@@ -52,7 +52,6 @@ test('create a transfer', function () {
             'date' => '2022-12-20',
             'amount' => 2000,
             'exchange_rate' => 1,
-            'category_id' => CategoryFactory::new()->createOne()->getKey(),
             'source_account_id' => $sourceAccount->getKey(),
             'destination_account_id' => $destinationAccount->getKey()
         ])

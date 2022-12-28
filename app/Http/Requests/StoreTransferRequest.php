@@ -16,6 +16,14 @@ class StoreTransferRequest extends FormRequest
                 'required',
                 'date',
             ],
+            'source_account_id' => [
+                'required',
+                'exists:accounts,id'
+            ],
+            'destination_account_id' => [
+                'required',
+                'exists:accounts,id'
+            ],
             'amount' => [
                 'required',
                 'numeric'
