@@ -20,6 +20,11 @@ processes = []
   LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
   MYSQL_ATTR_SSL_CA="/etc/ssl/certs/ca-certificates.crt"
 
+[processes]
+  app = ""
+  cron = "cron -f"
+  worker = "php artisan queue:work"
+
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
